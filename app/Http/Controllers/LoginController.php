@@ -10,6 +10,11 @@ class LoginController extends Controller
 {
     public function index()
     {
+
+        if (Auth::check()) {
+            return redirect('/dashboard')->with('success', 'Login Success!');
+        }
+
         return view('admin.auth.login_admin', [
             'title' => 'Login'
         ]);
@@ -24,11 +29,8 @@ class LoginController extends Controller
             'username.required' => 'required',
             'password.required' => 'required',
         ]);
-        $request->session()->regenerate();
-
 
         if (Auth::attempt($credentials)) {
-
             $request->session()->regenerate();
 
             return redirect()->intended('/dashboard')->with('success', 'Login Success!');
@@ -36,6 +38,7 @@ class LoginController extends Controller
 
         return back()->with("loginError", "Login Failed!");
     }
+
 
     public function registrasi()
     {
@@ -55,6 +58,16 @@ class LoginController extends Controller
         return $data;
 
 
+    }
+
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login')->with('success', 'Logout Success!');
     }
 }
 

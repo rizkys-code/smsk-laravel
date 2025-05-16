@@ -8,6 +8,13 @@
 
     <!-- Daftar Surat Keluar -->
     <div class="card mb-5">
+
+        @if (session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+        @endif
+
         <div class="card-header">
             <strong>Daftar Surat Keluar</strong>
         </div>
@@ -15,23 +22,55 @@
             <table class="table table-bordered">
                 <thead>
                     <tr>
+                        <th>Jenis Surat</th>
                         <th>No. Surat</th>
                         <th>Tanggal</th>
                         <th>Status</th>
+                        <th>Isi</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>H/UBL/010/095/07/24</td>
-                        <td>26 Juli 2024</td>
-                        <td><span class="badge bg-warning">Menunggu Persetujuan</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-info">Lihat</button>
-                            <button class="btn btn-sm btn-danger">Hapus</button>
-                            <button class="btn btn-sm btn-warning">Review</button>
-                        </td>
-                    </tr>
+                    @foreach ($dataSurat as $surat)
+                        @php
+
+                            $kodeSurat = [
+                                'SA' => 'Sertif Asisten / PKL',
+                                'SS' => 'Sertif Webinar / Workshop / Media Partner',
+                                'H' => 'Surat Perbaikan',
+                                'P' => 'Formulir Pendaftaran Calas',
+                                'S' => 'SK Asisten / Keterangan',
+                                'U' => 'Surat Undangan',
+                                'K' => 'Surat Keputusan',
+                            ];
+
+                            $jenis_surat =  $kodeSurat[$surat->jenis];
+
+                        @endphp
+                        <tr>
+                            <td>{{ $jenis_surat }}</td>
+                            <td>{{ $surat->nomor_surat }}</td>
+                            <td>{{ $surat->tanggal }}</td>
+                            <td><span class="badge bg-warning">{{ $surat->status }}</span></td>
+                            <td>{{ $surat->isi }}</td>
+                            <td>
+                                <a href="{{ route('surat-keluar.show', $surat->id) }}" class="btn btn-sm btn-info">Lihat</a>
+
+                                <form action="{{ route('surat-keluar.destroy', $surat->id) }}" method="POST"
+                                    style="display: inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                </form>
+
+                                <a href="{{ route('surat-keluar.review', $surat->id) }}"
+                                    class="btn btn-sm btn-warning">Review</a>
+                            </td>
+
+                        </tr>
+                    @endforeach
+
                 </tbody>
             </table>
         </div>
@@ -43,7 +82,7 @@
             <strong>Tambah Surat Keluar</strong>
         </div>
         <div class="card-body">
-            <form action="{{ route('surat-keluar.create') }}" method="POST">
+            <form action="{{ route('surat-keluar.store') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label for="jenis_surat" class="form-label">Pilih Jenis Surat</label>
@@ -61,8 +100,8 @@
 
                 <div class="mb-3">
                     <label for="perihal" class="form-label">Perihal Surat</label>
-                    <input type="text" name="perihal" id="perihal" class="form-control"
-                        placeholder="Perihal Surat" required>
+                    <input type="text" name="perihal" id="perihal" class="form-control" placeholder="Perihal Surat"
+                        required>
                 </div>
 
                 <div class="mb-3">
@@ -87,7 +126,7 @@
                 </div>
 
                 <!-- Lampiran Dinamis -->
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">Lampiran Tambahan (Dinamis)</label>
                     <div id="lampiran-container">
                         <div class="row mb-2 lampiran-group">
@@ -103,7 +142,7 @@
                     </div>
                     <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="tambahLampiran()">+ Tambah Baris
                         Lampiran</button>
-                </div>
+                </div> --}}
 
                 <div class="d-flex gap-2">
                     <button type="submit" name="aksi" value="minta_persetujuan" class="btn btn-warning">
