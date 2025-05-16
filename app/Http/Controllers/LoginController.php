@@ -14,23 +14,31 @@ class LoginController extends Controller
             'title' => 'Login'
         ]);
     }
+
     public function authenticate(Request $request)
     {
         $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required'
+        ], [
+            'username.required' => 'required',
+            'password.required' => 'required',
         ]);
+        $request->session()->regenerate();
+
 
         if (Auth::attempt($credentials)) {
+
             $request->session()->regenerate();
 
             return redirect()->intended('/welcome');
-        }   
+        }
 
         return back()->with("loginError", "Login Failed!");
     }
 
-    public function registrasi(){
+    public function registrasi()
+    {
         $admin = "admin";
         $data = User::create([
             "username" => "superadmin",
@@ -44,7 +52,7 @@ class LoginController extends Controller
             "password" => Hash::make($admin),
             "name" => "spv",
         ]);
-        return $data;  
+        return $data;
 
 
     }
