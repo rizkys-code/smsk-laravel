@@ -23,7 +23,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 Route::prefix('/dashboard/surat-masuk')->group(function () {
     Route::get('/', [SuratMasukController::class, 'index'])->name('surat-masuk');
-    Route::get('/tambah', [SuratMasukController::class, 'create'])->name('surat-masuk.create');
+    Route::get('/create', [SuratMasukController::class, 'create'])->name('surat-masuk.create');
     // Route::put('/edit/{id}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
     // Route::delete('/delete/{id}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
     // Route::get('/detail/{id}', [SuratMasukController::class, 'show'])->name('surat-masuk.show');
@@ -37,6 +37,7 @@ Route::prefix(('dashboard/surat-revisi'))->group(function () {
 
 Route::prefix('/dashboard/surat-keluar')->group(function () {
     Route::get('/', [SuratKeluarController::class, 'index'])->name('surat-keluar');
+    Route::post('/create', [SuratKeluarController::class, 'create'])->name('surat-keluar.create');
 });
 
 
