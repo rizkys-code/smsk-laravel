@@ -100,10 +100,16 @@ use Illuminate\Http\Request;
 
 class SuratRevisiController extends Controller
 {
+    // public function index()
+    // {
+    //     $revisiList = SuratRevisi::with('surat')->latest()->get();
+    //     // dd($revisiList);
+    //     return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
+    // }
+
     public function index()
     {
-        $revisiList = SuratRevisi::with('surat')->latest()->get();
-        // dd($revisiList);
+        $revisiList = SuratKeluar::whereIn('status', ['ditolak', 'diperbaiki'])->get();
         return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
     }
 
@@ -118,35 +124,65 @@ class SuratRevisiController extends Controller
         return view('admin.dashboard.surat-revisi.show', compact('revisi'));
     }
 
+    // public function edit($id)
+    // {
+    //     $revisi = SuratRevisi::with('surat')->findOrFail($id);
+    //     return view('admin.dashboard.surat-revisi.edit', compact('revisi'));
+    // }
+
     public function edit($id)
     {
-        $revisi = SuratRevisi::with('surat')->findOrFail($id);
-        return view('admin.dashboard.surat-revisi.edit', compact('revisi'));
+        $surat = SuratKeluar::findOrFail($id);
+        return view('admin.dashboard.surat-revisi.edit', compact('surat'));
     }
+
+    // public function update(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'nomor_surat' => 'required|string',
+    //         'perihal' => 'required|string',
+    //         'tujuan' => 'required|string',
+    //         'isi' => 'required|string',
+    //     ]);
+
+    //     $suratRevisi = SuratRevisi::findOrFail($id);
+    //     $surat = SuratKeluar::findOrFail($suratRevisi->surat_id);
+
+    //     $surat->update([
+    //         'nomor_surat' => $request->nomor_surat,
+    //         'perihal' => $request->perihal,
+    //         'tujuan' => $request->tujuan,
+    //         'isi' => $request->isi,
+    //         'status' => 'diajukan',
+    //     ]);
+
+    //     $suratRevisi->delete();
+
+    //     return redirect()->route('surat-revisi')->with('success', 'Surat berhasil direvisi dan diajukan ulang.');
+    // }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nomor_surat' => 'required|string',
-            'perihal' => 'required|string',
-            'tujuan' => 'required|string',
-            'isi' => 'required|string',
+            'jenis_surat' => 'required',
+            'perihal' => 'required',
+            'tanggal' => 'required|date',
+            'isi_surat' => 'required',
         ]);
 
-        $suratRevisi = SuratRevisi::findOrFail($id);
-        $surat = SuratKeluar::findOrFail($suratRevisi->surat_id);
+        $surat = SuratKeluar::findOrFail($id);
 
         $surat->update([
-            'nomor_surat' => $request->nomor_surat,
+            'jenis' => $request->jenis_surat,
             'perihal' => $request->perihal,
-            'tujuan' => $request->tujuan,
-            'isi' => $request->isi,
-            'status' => 'diajukan',
+            'tanggal' => $request->tanggal,
+            'isi' => $request->isi_surat,
+            'status' => 'diperbaiki',
+            'keterangan_revisi' => $request->keterangan_revisi,
         ]);
 
-        $suratRevisi->delete();
-
-        return redirect()->route('surat-revisi')->with('success', 'Surat berhasil direvisi dan diajukan ulang.');
+        return redirect()->route('surat-revisi')
+            ->with('success', 'Surat berhasil direvisi dan menunggu persetujuan.');
     }
 
 }

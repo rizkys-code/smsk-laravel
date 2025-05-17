@@ -202,7 +202,7 @@
                             @endif
 
                             @if ($surat->status === 'ditolak')
-                                <a href="{{ route('surat-keluar.review', $surat->id) }}"
+                                <a href="{{ route('surat-revisi.edit', $surat->id) }}"
                                     class="btn btn-secondary d-flex align-items-center justify-content-center gap-2">
                                     <i class="bi bi-pencil"></i> Revisi Surat
                                 </a>

@@ -125,12 +125,12 @@
                                             </form>
 
                                             @if ($surat->status === 'ditolak')
-                                                <a href="{{ route('surat-keluar.review', $surat->id) }}"
+                                                <a href="{{ route('surat-revisi.edit', $surat->id) }}"
                                                     class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip"
                                                     title="Revisi">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                            @elseif ($surat->status === 'menunggu')
+                                            @elseif ($surat->status === 'menunggu' || $surat->status === 'diperbaiki')
                                                 <a href="{{ route('surat-keluar.review', $surat->id) }}"
                                                     class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
                                                     title="Review">

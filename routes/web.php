@@ -34,7 +34,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [SuratRevisiController::class, 'index'])->name('surat-revisi');
             // Route::patch('/{id}', [SuratRevisiController::class, 'update'])->name('surat-revisi.update');
             Route::get('/{id}/edit', [SuratRevisiController::class, 'edit'])->name('surat-revisi.edit');
-            Route::put('/{id}', [SuratRevisiController::class, 'update'])->name('surat-revisi.update');
+            Route::put('/{id}', action: [SuratRevisiController::class, 'update'])->name('surat-revisi.update');
 
         });
 
