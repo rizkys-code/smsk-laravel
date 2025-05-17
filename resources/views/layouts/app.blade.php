@@ -20,7 +20,7 @@
 
         .sidebar {
             width: var(--sidebar-width);
-            background-color: #fff;
+            background-color: #ffffff;
             box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
             position: fixed;
             height: 100vh;
@@ -29,19 +29,20 @@
         }
 
         .sidebar-header {
-            padding: 1rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-brand {
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            flex-direction: column;
         }
 
         .brand-logo {
             width: 32px;
-            height: 32px;
+            height: 33px;
             background-color: #0d6efd;
             color: white;
             border-radius: 50%;
@@ -209,8 +210,8 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
-                <div class="brand-logo">D</div>
-                <div class="brand-name fw-bold">Dashboard</div>
+                <div class="brand-logo"><img src="../public/logo_lab.png" alt="p"></div>
+                <div class="brand-name fw-bold">Surat Masuk/Surat Keluar LAB ICT Terpadu</div>
             </div>
         </div>
         <div class="sidebar-content">

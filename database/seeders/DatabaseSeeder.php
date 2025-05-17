@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'username' => 'admin', // Username
             'password' => bcrypt('admin'),
             'role' => 'admin', // Role
-            'name' => 'rama', // Name
+            'name' => 'spv', // Name
             'created_at' => Carbon::now(), // Timestamp for created_at
             'updated_at' => Carbon::now(), // Timestamp for updated_at
         ]);
