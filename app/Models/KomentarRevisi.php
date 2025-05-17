@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class KomentarRevisi extends Model
 {
+    use HasFactory;
+
     protected $table = 'komentar_revisi';
     protected $fillable = ['surat_id', 'komentar', 'created_by', 'dokumen_revisi_path'];
 
@@ -19,4 +22,3 @@ class KomentarRevisi extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

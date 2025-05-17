@@ -3,9 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
+use App\Models\LampiranSurat;
+use App\Models\KomentarRevisi;
+
 class SuratKeluar extends Model
 {
     protected $table = 'surat_keluar';
+
     protected $fillable = [
         'nomor_surat',
         'perihal',
@@ -19,16 +24,6 @@ class SuratKeluar extends Model
         'barcode_path',
     ];
 
-    public function lampiran()
-    {
-        return $this->hasMany(LampiranSurat::class, 'surat_id');
-    }
-
-    public function komentarRevisi()
-    {
-        return $this->hasMany(KomentarRevisi::class, 'surat_id');
-    }
-
     public function pembuat()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -37,5 +32,15 @@ class SuratKeluar extends Model
     public function penyetuju()
     {
         return $this->belongsTo(User::class, 'signed_by');
+    }
+
+    public function lampiran()
+    {
+        return $this->hasMany(LampiranSurat::class, 'surat_id');
+    }
+
+    public function komentarRevisi()
+    {
+        return $this->hasMany(KomentarRevisi::class, 'surat_id');
     }
 }

@@ -12,9 +12,9 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-Route::get('/check-auth', function () {
-    return auth()->check() ? 'Logged In' : 'Not Logged In';
-});
+// Route::get('/check-auth', function () {
+//     return auth()->check() ? 'Logged In' : 'Not Logged In';
+// });
 
 Route::post('/login', [LoginController::class, 'authenticate']);
 Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -39,7 +39,14 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store', [SuratKeluarController::class, 'store'])->name('surat-keluar.store');
             Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('surat-keluar.show');
             Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
-            Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review'); 
+            Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review');
+            Route::get('/{id}/cetak', [SuratKeluarController::class, 'cetak'])->name('surat-keluar.cetak');
+            Route::patch('/{id}/approval', [SuratKeluarController::class, 'approval'])->name('surat-keluar.approval');
+            Route::post('/{id}/komentar', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.komentar');
+
+
+
+
         });
     });
 
