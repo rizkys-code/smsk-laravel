@@ -40,9 +40,9 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('surat-keluar.show');
             Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
             Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review');
-            Route::get('/{id}/cetak', [SuratKeluarController::class, 'cetak'])->name('surat-keluar.cetak');
+            Route::get('/{id}/print', [SuratKeluarController::class, 'cetak'])->name('surat-keluar.print');
             Route::patch('/{id}/approval', [SuratKeluarController::class, 'approval'])->name('surat-keluar.approval');
-            Route::post('/{id}/komentar', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.komentar');
+            Route::post('/{id}/comment', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.comment');
 
 
 
