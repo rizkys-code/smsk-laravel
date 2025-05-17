@@ -20,7 +20,8 @@ class SuratKeluarController extends Controller
         }
 
 
-        $dataSurat = SuratKeluar::with(['lampiran', 'pembuat', 'penyetuju'])->latest()->get();
+        // $dataSurat = SuratKeluar::with(['lampiran', 'pembuat', 'penyetuju'])->latest()->get();
+        $dataSurat = SuratKeluar::orderBy('created_at', 'desc')->paginate(10);
 
 
 
@@ -30,6 +31,8 @@ class SuratKeluarController extends Controller
 
     public function store(Request $request)
     {
+
+
 
         // dd($request->all());
         $request->validate([

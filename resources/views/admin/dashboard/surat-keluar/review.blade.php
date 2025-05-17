@@ -263,7 +263,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('surat-keluar.komentar', $surat->id) }}" method="POST"
+                        <form action="{{ route('surat-keluar.comment', $surat->id) }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             <div class="mb-3">
