@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KomentarRevisi;
 use App\Models\LampiranSurat;
 use App\Models\SuratKeluar;
+use App\Models\SuratRevisi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,10 +20,8 @@ class SuratKeluarController extends Controller
             return redirect()->route('login')->with('loginError', 'Login Required!');
         }
 
-
         // $dataSurat = SuratKeluar::with(['lampiran', 'pembuat', 'penyetuju'])->latest()->get();
         $dataSurat = SuratKeluar::orderBy('created_at', 'desc')->paginate(10);
-
 
 
         return view('admin.dashboard.surat-keluar.view', compact('dataSurat'));
@@ -31,7 +30,6 @@ class SuratKeluarController extends Controller
 
     public function store(Request $request)
     {
-
 
 
         // dd($request->all());
@@ -83,7 +81,7 @@ class SuratKeluarController extends Controller
         }
 
         if ($request->aksi === 'langsung_cetak') {
-            return redirect()->route('surat-keluar.cetak', $surat->id);
+            return redirect()->route('surat-keluar.print', $surat->id);
         }
 
         return redirect()->route('surat-keluar')->with('success', 'Surat berhasil disimpan dan menunggu persetujuan.');
@@ -125,12 +123,45 @@ class SuratKeluarController extends Controller
 
         $safeNomorSurat = str_replace(['/', '\\'], '-', $surat->nomor_surat);
 
-        $pdf = PDF::loadView('admin.dashboard.surat-keluar.cetak', compact('surat'));
+        $pdf = PDF::loadView('admin.dashboard.surat-keluar.print', compact('surat'));
         return $pdf->download('Surat-Keluar-' . $safeNomorSurat . '.pdf');
 
-        // $pdf = PDF::loadView('admin.dashboard.surat-keluar.cetak', compact('surat'));
+        // $pdf = PDF::loadView('admin.dashboard.surat-keluar.print', compact('surat'));
         // return $pdf->download('Surat-Keluar-' . $surat->nomor_surat . '.pdf');
     }
+    // public function approval(Request $request, $id)
+    // {
+    //     $surat = SuratKeluar::findOrFail($id);
+
+    //     $request->validate([
+    //         'status' => 'required|in:disetujui,ditolak',
+    //         'komentar_revisi' => 'nullable|string',
+    //         'dokumen_revisi' => 'nullable|file|mimes:pdf,doc,docx,jpg,png',
+    //     ]);
+
+    //     $surat->status = $request->input('status');
+    //     $surat->save();
+
+    //     // Jika surat ditolak dan ada komentar revisi
+    //     if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
+    //         $komentar = new KomentarRevisi();
+    //         $komentar->surat_id = $surat->id;
+    //         $komentar->komentar = $request->input('komentar_revisi');
+    //         $komentar->created_by = auth()->id();
+
+    //         // Jika ada file dokumen revisi, simpan dan set path
+    //         if ($request->hasFile('dokumen_revisi')) {
+    //             $path = $request->file('dokumen_revisi')->store('dokumen_revisi', 'public');
+    //             $komentar->dokumen_revisi_path = $path;
+    //         }
+
+    //         $komentar->save();
+    //     }
+
+    //     return redirect()->route('surat-keluar.review', $id)
+    //         ->with('success', 'Status surat berhasil diperbarui.');
+    // }
+
     public function approval(Request $request, $id)
     {
         $surat = SuratKeluar::findOrFail($id);
@@ -138,26 +169,17 @@ class SuratKeluarController extends Controller
         $request->validate([
             'status' => 'required|in:disetujui,ditolak',
             'komentar_revisi' => 'nullable|string',
-            'dokumen_revisi' => 'nullable|file|mimes:pdf,doc,docx,jpg,png',
         ]);
 
         $surat->status = $request->input('status');
         $surat->save();
 
-        // Jika surat ditolak dan ada komentar revisi
         if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
-            $komentar = new KomentarRevisi();
-            $komentar->surat_id = $surat->id;
-            $komentar->komentar = $request->input('komentar_revisi');
-            $komentar->created_by = auth()->id();
-
-            // Jika ada file dokumen revisi, simpan dan set path
-            if ($request->hasFile('dokumen_revisi')) {
-                $path = $request->file('dokumen_revisi')->store('dokumen_revisi', 'public');
-                $komentar->dokumen_revisi_path = $path;
-            }
-
-            $komentar->save();
+            SuratRevisi::create([
+                'surat_id' => $surat->id,
+                'komentar_revisi' => $request->komentar_revisi,
+                'created_by' => auth()->id(),
+            ]);
         }
 
         return redirect()->route('surat-keluar.review', $id)

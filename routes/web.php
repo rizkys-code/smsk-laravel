@@ -32,6 +32,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('surat-revisi')->group(function () {
             Route::get('/', [SuratRevisiController::class, 'index'])->name('surat-revisi');
+            // Route::patch('/{id}', [SuratRevisiController::class, 'update'])->name('surat-revisi.update');
+            Route::get('/{id}/edit', [SuratRevisiController::class, 'edit'])->name('surat-revisi.edit');
+            Route::put('/{id}', [SuratRevisiController::class, 'update'])->name('surat-revisi.update');
+
         });
 
         Route::prefix('surat-keluar')->group(function () {
@@ -43,9 +47,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/{id}/print', [SuratKeluarController::class, 'cetak'])->name('surat-keluar.print');
             Route::patch('/{id}/approval', [SuratKeluarController::class, 'approval'])->name('surat-keluar.approval');
             Route::post('/{id}/comment', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.comment');
-
-
-
 
         });
     });

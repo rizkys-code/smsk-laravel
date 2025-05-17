@@ -17,7 +17,7 @@
                 <a href="{{ route('surat-keluar') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
                     <i class="bi bi-arrow-left"></i> Kembali
                 </a>
-                <a href="{{ route('surat-keluar.cetak', $surat->id) }}"
+                <a href="{{ route('surat-keluar.print', $surat->id) }}"
                     class="btn btn-outline-primary d-flex align-items-center gap-2" target="_blank">
                     <i class="bi bi-printer"></i> Cetak
                 </a>
@@ -194,7 +194,7 @@
                             @endif
 
                             @if ($surat->status === 'disetujui')
-                                <a href="{{ route('surat-keluar.cetak', $surat->id) }}"
+                                <a href="{{ route('surat-keluar.print', $surat->id) }}"
                                     class="btn btn-success d-flex align-items-center justify-content-center gap-2"
                                     target="_blank">
                                     <i class="bi bi-printer"></i> Cetak Surat

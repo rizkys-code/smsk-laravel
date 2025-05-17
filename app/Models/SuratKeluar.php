@@ -43,4 +43,8 @@ class SuratKeluar extends Model
     {
         return $this->hasMany(KomentarRevisi::class, 'surat_id');
     }
+    public function revisi()
+    {
+        return $this->hasMany(SuratRevisi::class, 'surat_id');
+    }
 }

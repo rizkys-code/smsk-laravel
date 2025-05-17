@@ -1,121 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login - Sistem Manajemen Surat</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <title>Login</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <!-- Custom fonts for this template-->
-    <link href="{{ asset('sbadmin-2/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            width: 100%;
+        }
 
-    <!-- Custom styles for this template-->
-    <link href="{{ asset('sbadmin-2/css/sb-admin-2.min.css') }}" rel="stylesheet">
+        .login-card {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
 
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #333;
+        }
+
+        .form-control {
+            padding: 0.75rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-control:focus {
+            border-color: #4e73df;
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+
+        .btn-login {
+            background-color: #4e73df;
+            border: none;
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .btn-login:hover {
+            background-color: #3a56b0;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            border: none;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .form-check-input:checked {
+            background-color: #4e73df;
+            border-color: #4e73df;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .login-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #6c757d;
+        }
+
+        .login-links {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+        }
+
+        .login-links a {
+            color: #4e73df;
+            text-decoration: none;
+        }
+
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+<body>
+    <div class="container login-container">
+        <div class="login-card">
+            <h1 class="login-title">Login</h1>
 
-<body class="bg-gradient-primary">
+            @if (session('loginError'))
+            <div class="alert alert-danger" role="alert">
+                {{ session('loginError') }}
+            </div>
+            @endif
 
-    <div class="container">
+            @if ($errors->has('username') || $errors->has('password'))
+            <div class="alert alert-danger" role="alert">
+                Username dan Password tidak boleh kosong.
+            </div>
+            @endif
 
-        <!-- Outer Row -->
-        <div class="row justify-content-center">
-
-            <div class="col-xl-10 col-lg-12 col-md-9">
-
-                <div class="card o-hidden border-0 shadow-lg my-5">
-                    <div class="card-body p-0">
-                        <!-- Nested Row within Card Body -->
-                        <div class="row">
-                            <div class="col-lg-6 d-none d-lg-block bg-login-image"
-                                style="background-image: url('{{ asset('sbadmin-2/img/login-bg.jpg') }}');"></div>
-                            <div class="col-lg-6">
-                                <div class="p-5">
-                                    <div class="text-center">
-                                        <h1 class="h4 text-gray-900 mb-4">Halo LABKOMERS!</h1>
-                                    </div>
-
-                                    @if (session('loginError'))
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            {{ session('loginError') }}
-                                            <button type="button" class="close" data-dismiss="alert"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    @endif
-
-                                    @if ($errors->has('username') || $errors->has('password'))
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            Username dan Password tidak boleh kosong.
-                                            <button type="button" class="close" data-dismiss="alert"
-                                                aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    @endif
-
-                                    <form class="user" action="/login" method="POST">
-                                        @csrf
-                                        <div class="form-group">
-                                            <input type="text" name="username" class="form-control form-control-user"
-                                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="User name">
-                                        </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password"
-                                                class="form-control form-control-user" id="exampleInputPassword"
-                                                placeholder="Password">
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">
-                                            Login
-                                        </button>
-                                        <hr>
-                                    </form>
-                                    <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
-                                    <div class="text-center">
-                                        <a class="small" href="register.html">Create an Account!</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <form action="/login" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Masukkan username">
                 </div>
 
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password">
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="customCheck" name="remember">
+                    <label class="form-check-label" for="customCheck">Remember Me</label>
+                </div>
+
+                <button type="submit" class="btn btn-login">Login</button>
+            </form>
+
+            <div class="login-links">
+                <a href="forgot-password.html">Lupa Password?</a> |
+                <a href="register.html">Daftar Akun</a>
             </div>
 
+            <div class="login-footer">
+                &copy; {{ date('Y') }} Sistem Manajemen Surat
+            </div>
         </div>
-
     </div>
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('sbadmin-2/vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('sbadmin-2/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset('sbadmin-2/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="{{ asset('sbadmin-2/js/sb-admin-2.min.js') }}"></script>
-
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
