@@ -103,6 +103,7 @@ class SuratRevisiController extends Controller
     public function index()
     {
         $revisiList = SuratRevisi::with('surat')->latest()->get();
+        // dd($revisiList);
         return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
     }
 
@@ -147,4 +148,5 @@ class SuratRevisiController extends Controller
 
         return redirect()->route('surat-revisi')->with('success', 'Surat berhasil direvisi dan diajukan ulang.');
     }
+
 }

@@ -145,30 +145,6 @@
                     </table>
                 </div>
             </div>
-            {{-- <div class="card-footer bg-white py-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="text-muted small">
-                    Menampilkan {{ count($dataSurat) }} surat
-                </div>
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm mb-0">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                <i class="bi bi-chevron-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">
-                                <i class="bi bi-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div> --}}
             <div class="card-footer bg-white py-3">
                 <div class="d-flex justify-content-between align-items-center flex-column flex-md-row gap-2">
                     <div class="text-muted small">
@@ -261,7 +237,7 @@
                     </div>
 
                     <!-- Lampiran Dinamis -->
-                    {{-- <div class="col-12 mt-4">
+                    <div class="col-12 mt-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <label class="form-label fw-medium mb-0">
                                 <i class="bi bi-paperclip me-1"></i>Lampiran Tambahan (Opsional)
@@ -282,7 +258,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
 
                     <div class="col-12 mt-4">
                         <div class="d-flex gap-2">

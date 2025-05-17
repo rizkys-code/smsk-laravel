@@ -31,15 +31,13 @@ class SuratKeluarController extends Controller
     public function store(Request $request)
     {
 
-
-        // dd($request->all());
         $request->validate([
             'jenis_surat' => 'required',
             'perihal' => 'required',
             'tanggal' => 'required|date',
-            'lampiran' => 'required|integer',
+            // 'lampiran' => 'required|integer',
             'isi_surat' => 'required|string',
-            // 'lampiran_data' => 'array',
+            'lampiran' => 'array',
         ]);
 
 
@@ -63,7 +61,7 @@ class SuratKeluarController extends Controller
         ]);
 
         // Simpan lampiran dinamis
-        if ($request->has('lampiran')) {
+        if ($request->has('lampiran_data')) {
             $lampiranArray = $request->lampiran;
             if (is_string($lampiranArray)) {
                 $lampiranArray = json_decode($lampiranArray, true) ?? [];
@@ -79,6 +77,17 @@ class SuratKeluarController extends Controller
                 }
             }
         }
+        // if ($request->filled('lampiran') && is_numeric($request->lampiran)) {
+        //     $jumlahLampiran = (int) $request->lampiran;
+        //     for ($i = 1; $i <= $jumlahLampiran; $i++) {
+        //         LampiranSurat::create([
+        //             'surat_id' => $surat->id,
+        //             'label' => 'Lampiran ' . $i,
+        //             'isi' => '', // Isi bisa diisi sesuai kebutuhan, atau dikosongkan
+        //             'urutan_grup' => $i,
+        //         ]);
+        //     }
+        // }
 
         if ($request->aksi === 'langsung_cetak') {
             return redirect()->route('surat-keluar.print', $surat->id);
@@ -165,6 +174,7 @@ class SuratKeluarController extends Controller
     public function approval(Request $request, $id)
     {
         $surat = SuratKeluar::findOrFail($id);
+        $komentar = KomentarRevisi::where('surat_id', $id)->first();
 
         $request->validate([
             'status' => 'required|in:disetujui,ditolak',
@@ -174,10 +184,34 @@ class SuratKeluarController extends Controller
         $surat->status = $request->input('status');
         $surat->save();
 
-        if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
+        // dd($surat, $komentar);
+
+        $data = [
+            'surat_id' => $surat->id,
+            'nomor_surat' => $surat->nomor_surat,
+            'perihal' => $surat->perihal,
+            'isi' => $surat->isi,
+            'lampiran' => $surat->lampiran,
+            'status' => 'ditolak',
+            'jenis' => $surat->jenis,
+            'komentar_revisi' => $komentar->komentar,
+            'created_by' => auth()->id(),
+        ];
+
+        // dd($data);
+
+        // if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
+        if ($request->status === 'ditolak') {
+            // dd('ditolak loh');
             SuratRevisi::create([
                 'surat_id' => $surat->id,
-                'komentar_revisi' => $request->komentar_revisi,
+                'nomor_surat' => $surat->nomor_surat,
+                'perihal' => $surat->perihal,
+                'isi' => $surat->isi,
+                'lampiran' => $surat->lampiran,
+                'status' => 'diperbaiki',
+                'jenis' => $surat->jenis,
+                'komentar_revisi' => $komentar->komentar,
                 'created_by' => auth()->id(),
             ]);
         }
@@ -202,7 +236,7 @@ class SuratKeluarController extends Controller
             'surat_id' => $id,
             'komentar' => $request->komentar,
             'created_by' => auth()->id(),
-            'dokumen_revisi_path' => $path,
+            // 'dokumen_revisi_path' => $path,
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan.');

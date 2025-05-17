@@ -10,7 +10,7 @@ class KomentarRevisi extends Model
     use HasFactory;
 
     protected $table = 'komentar_revisi';
-    protected $fillable = ['surat_id', 'komentar', 'created_by', 'dokumen_revisi_path'];
+    protected $fillable = ['surat_id', 'komentar', 'created_by'];
 
     public function surat()
     {

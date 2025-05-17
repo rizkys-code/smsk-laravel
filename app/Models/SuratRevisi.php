@@ -9,11 +9,22 @@ class SuratRevisi extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'surat_id',
-        'komentar_revisi',
-        'created_by',
-    ];
+    protected $table = 'surat_revisi';
+
+    // protected $fillable = [
+    //     'surat_id',
+    //     'nomor_surat',
+    //     'perihal',
+
+    //     'isi',
+    //     'lampiran',
+    //     'tanggal',
+    //     'status',
+    //     'aksi',
+    //     'komentar_revisi',
+    //     'created_by',
+    // ];
+    protected $guarded = ['id'];
 
     public function surat()
     {

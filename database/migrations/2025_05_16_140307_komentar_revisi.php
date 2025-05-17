@@ -15,7 +15,6 @@ return new class extends Migration {
             $table->foreignId('surat_id')->constrained('surat_keluar')->onDelete('cascade');
             $table->text('komentar');
             $table->foreignId('created_by')->constrained('users');
-            $table->string('dokumen_revisi_path')->nullable();
             $table->timestamps();
         });
     }

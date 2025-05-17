@@ -11,18 +11,20 @@ class SuratKeluar extends Model
 {
     protected $table = 'surat_keluar';
 
-    protected $fillable = [
-        'nomor_surat',
-        'perihal',
-        'isi',
-        'tanggal',
-        'jenis',
-        'status',
-        'user_id',
-        'signed_by',
-        'signed_at',
-        'barcode_path',
-    ];
+    // protected $fillable = [
+    //     'nomor_surat',
+    //     'perihal',
+    //     'isi',
+    //     'tanggal',
+    //     'jenis',
+    //     'status',
+    //     'user_id',
+    //     'signed_by',
+    //     'signed_at',
+    //     'barcode_path',
+    // ];
+
+    protected $guarded = ['id'];
 
     public function pembuat()
     {
