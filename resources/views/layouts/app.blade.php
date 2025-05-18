@@ -40,18 +40,6 @@
             flex-direction: column;
         }
 
-        .brand-logo {
-            width: 32px;
-            height: 33px;
-            background-color: #0d6efd;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
         .sidebar-content {
             padding: 1rem 0;
         }
@@ -210,7 +198,9 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-brand">
-                <div class="brand-logo"><img src="../public/logo_lab.png" alt="p"></div>
+                <div class="" style="width:100px; height:100px; padding:4px; display:flex; align-items:center; justify-content:;">
+                    <img src="{{ asset('logo_lab.png') }}" alt="p" style="max-width:100%; max-height:100%; object-fit:contain;">
+                </div>
                 <div class="brand-name fw-bold">Surat Masuk/Surat Keluar LAB ICT Terpadu</div>
             </div>
         </div>
@@ -277,14 +267,10 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text fw-bold">My Account</span></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                        <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Profile</a></li>
                         <li><a class="dropdown-item" href="#">Settings</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
@@ -302,14 +288,29 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebar = document.getElementById('sidebar');
 
-            sidebarToggle.addEventListener('click', function() {
+            sidebarToggle.addEventListener('click', function (e) {
+                e.stopPropagation();
                 sidebar.classList.toggle('show');
+            });
+
+            document.addEventListener('click', function (event) {
+                const isClickInsideSidebar = sidebar.contains(event.target);
+                const isSmallScreen = window.innerWidth <= 768;
+
+                if (!isClickInsideSidebar && sidebar.classList.contains('show') && isSmallScreen) {
+                    sidebar.classList.remove('show');
+                }
+            });
+
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('show');
+                }
             });
         });
     </script>
