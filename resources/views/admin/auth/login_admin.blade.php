@@ -152,7 +152,7 @@
             </div>
 
             <div class="login-footer">
-                &copy; {{ date('Y') }} Sistem Manajemen Surat
+                &copy; {{ date('Y') }} Sistem Manajemen Surat LAB ICT
             </div>
         </div>
     </div>
