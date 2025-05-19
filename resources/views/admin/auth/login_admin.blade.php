@@ -26,7 +26,7 @@
 
         .login-card {
             background-color: #fff;
-            border-radius: 5px;
+            border-radius: 9px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             padding: 2rem;
         }
@@ -107,12 +107,22 @@
         .login-links a:hover {
             text-decoration: underline;
         }
+
+        .logo{
+            display: flex;
+            justify-content: center;
+            align-items: center; 
+            flex-direction: column;
+        }
     </style>
 </head>
 <body>
     <div class="container login-container">
         <div class="login-card">
-            <h1 class="login-title">Login</h1>
+            <div class="logo">
+                <img src="{{ asset('logo_lab.png') }}" alt="logo" >
+                <h1 class="login-title">Login</h1>
+            </div>
 
             @if (session('loginError'))
             <div class="alert alert-danger" role="alert">
