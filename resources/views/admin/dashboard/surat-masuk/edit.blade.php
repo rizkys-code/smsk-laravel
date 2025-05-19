@@ -15,7 +15,7 @@
             <h2 class="fw-bold text-primary mb-0">Edit Surat Masuk</h2>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('surat-masuk.show', $surat->id) }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+            <a href="{{ route('surat-masuk') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
         </div>
@@ -51,26 +51,26 @@
                     <!-- Current Document Preview -->
                     <div class="document-preview w-100 text-center mb-4">
                         @php
-                            $extension = pathinfo($surat->file_path, PATHINFO_EXTENSION);
+                            $extension = pathinfo($surat->dokumen_surat, PATHINFO_EXTENSION);
                             $isImage = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']);
                             $isPdf = strtolower($extension) === 'pdf';
                         @endphp
 
                         @if($isImage)
-                            <img src="{{ asset('storage/' . $surat->file_path) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 300px;">
+                            <img src="{{ asset('storage/' . $surat->dokumen_surat) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 300px;">
                         @elseif($isPdf)
                             <div class="text-center py-3">
                                 <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 4rem;"></i>
-                                <h6 class="mt-2">{{ basename($surat->file_path) }}</h6>
-                                <a href="{{ asset('storage/' . $surat->file_path) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank">
+                                <h6 class="mt-2">{{ basename($surat->dokumen_surat) }}</h6>
+                                <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank">
                                     <i class="bi bi-eye"></i> Lihat PDF
                                 </a>
                             </div>
                         @else
                             <div class="text-center py-3">
                                 <i class="bi bi-file-earmark-text text-primary" style="font-size: 4rem;"></i>
-                                <h6 class="mt-2">{{ basename($surat->file_path) }}</h6>
-                                <a href="{{ asset('storage/' . $surat->file_path) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank" download>
+                                <h6 class="mt-2">{{ basename($surat->dokumen_surat) }}</h6>
+                                <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank" download>
                                     <i class="bi bi-download"></i> Unduh Dokumen
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
                     <!-- Upload New Document -->
                     <form action="{{ route('surat-masuk.update-file', $surat->id) }}" method="POST" enctype="multipart/form-data" class="mt-3">
                         @csrf
-                        @method('PATCH')
+                        @method('PUT')
                         <div class="mb-3">
                             <label for="new_file" class="form-label fw-medium">
                                 <i class="bi bi-upload me-1"></i>Ganti Dokumen (Opsional)
@@ -109,7 +109,7 @@
                 <div class="card-body">
                     <form action="{{ route('surat-masuk.update', $surat->id) }}" method="POST">
                         @csrf
-                        @method('PATCH')
+                        @method('PUT')
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="jenis_surat" class="form-label fw-medium">Jenis Surat</label>
@@ -188,7 +188,7 @@
                                     <span class="input-group-text bg-light">
                                         <i class="bi bi-building"></i>
                                     </span>
-                                    <input type="text" id="instansi_pengirim" name="instansi_pengirim" class="form-control"
+                                    <input type="text" id="instansi_pengirim" name="instansi_pengirim" class="form-control" required
                                         value="{{ $surat->instansi_pengirim }}" placeholder="Nama instansi (opsional)">
                                 </div>
                             </div>
