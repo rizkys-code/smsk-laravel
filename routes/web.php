@@ -27,8 +27,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::prefix('surat-masuk')->group(function () {
             Route::get('/', [SuratMasukController::class, 'index'])->name('surat-masuk');
-            Route::get('/create', [SuratMasukController::class, 'create'])->name('surat-masuk.create');
+            Route::post('/', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
+            Route::get('/{id}', [SuratMasukController::class, 'show'])->name('surat-masuk.show');
+            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit');
+            Route::put('/{id}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
+            Route::delete('/{id}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
+            Route::get('/{id}/revision', [SuratMasukController::class, 'revision'])->name('surat-masuk.revision');
+            Route::post('/{id}/revision', [SuratMasukController::class, 'processRevision'])->name('surat-masuk.process-revision');
+            Route::post('/{id}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi');
         });
+
 
         Route::prefix('surat-revisi')->group(function () {
             Route::get('/', [SuratRevisiController::class, 'index'])->name('surat-revisi');
