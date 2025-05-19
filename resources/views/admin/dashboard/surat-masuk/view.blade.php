@@ -73,9 +73,9 @@
                                     <td>
                                         <div class="d-flex justify-content-center gap-1">
                                             <a href="{{ route('surat-masuk.show', $surat->id) }}"
-                                               class="btn btn-sm btn-outline-primary"
-                                               data-bs-toggle="tooltip"
-                                               title="Lihat Detail">
+                                                class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="tooltip"
+                                                title="Lihat Detail">
                                                 <i class="bi bi-eye"></i>
                                             </a>
 
@@ -267,7 +267,7 @@
                                             <i class="bi bi-building"></i>
                                         </span>
                                         <input type="text" id="instansi" name="instansi" class="form-control"
-                                            placeholder="Nama instansi (opsional)">
+                                            placeholder="Nama instansi">
                                     </div>
                                 </div>
 
