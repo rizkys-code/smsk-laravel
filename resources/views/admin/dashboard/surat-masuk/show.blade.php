@@ -26,13 +26,14 @@
 
     <div class="row">
         <!-- Document Preview Column -->
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow-sm border-0 h-100">
+        <div class="col-lg-5 mb-4 ">
+            <div class="card shadow-sm border-0 h-50">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-primary">
                         <i class="bi bi-file-earmark-text me-2"></i>Dokumen Surat
                     </h5>
-                    <a href="{{ asset('storage/' . $surat->file_path) }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
+
+                    <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
                         <i class="bi bi-download"></i> Unduh
                     </a>
                 </div>
@@ -40,19 +41,19 @@
                     <!-- Document Preview -->
                     <div class="document-preview w-100 text-center">
                         @php
-                            $extension = pathinfo($surat->file_path, PATHINFO_EXTENSION);
+                            $extension = pathinfo($surat->dokumen_surat, PATHINFO_EXTENSION);
                             $isImage = in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif']);
                             $isPdf = strtolower($extension) === 'pdf';
                         @endphp
 
                         @if($isImage)
-                            <img src="{{ asset('storage/' . $surat->file_path) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 500px;">
+                            <img src="{{ asset('storage/' . $surat->dokumen_surat) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 1000px;">
                         @elseif($isPdf)
-                            <embed src="{{ asset('storage/' . $surat->file_path) }}" type="application/pdf" width="100%" height="500px">
+                            <embed src="{{ asset('storage/' . $surat->dokumen_surat) }}" type="application/pdf" width="100%" height="1000px">
                         @else
                             <div class="text-center py-5">
                                 <i class="bi bi-file-earmark-text text-primary" style="font-size: 5rem;"></i>
-                                <h5 class="mt-3">{{ basename($surat->file_path) }}</h5>
+                                <h5 class="mt-3">{{ basename($surat->dokumen_surat) }}</h5>
                                 <p class="text-muted">Klik tombol unduh untuk melihat dokumen</p>
                             </div>
                         @endif
@@ -87,7 +88,7 @@
                                     <i class="bi bi-calendar-date text-primary"></i>
                                     <span>Tanggal Surat</span>
                                 </div>
-                                <div class="detail-value">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->format('d F Y') }}</div>
+                                <div class="detail -value">{{ \Carbon\Carbon::parse($surat->tanggal_surat)->format('d F Y') }}</div>
                             </div>
                         </div>
                         <div class="col-md-12">

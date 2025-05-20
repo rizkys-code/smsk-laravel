@@ -42,7 +42,7 @@
     <div class="col-md-6 col-lg-3">
         <div class="card stats-card">
             <div class="d-flex justify-content-between">
-                <p class="mb-0 fw-medium">Completed</p>
+                <p class="mb-0 fw-medium">Berhasil Di Setujui</p>
             </div>
             <div class="mt-3">
                 <p class="h2 fw-bold mb-0">42</p>

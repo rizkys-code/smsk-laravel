@@ -50,7 +50,9 @@
                     <table class="table table-hover align-middle mb-0" id="suratTable">
                         <thead class="table-light">
                             <tr>
+                                <th class="py-3">No</th>
                                 <th class="py-3">Jenis Surat</th>
+                                <th class="py-3">Nama Surat</th>
                                 <th class="py-3">Pengirim</th>
                                 <th class="py-3">Instansi</th>
                                 <th class="py-3">Tanggal</th>
@@ -61,7 +63,9 @@
                         <tbody>
                             @forelse($suratMasuk as $key => $surat)
                                 <tr>
+                                    <td>{{ $key + 1 }}</td>
                                     <td>{{ $surat->jenis_surat }}</td>
+                                    <td>{{ $surat->nama_surat }}</td>
                                     <td>{{ $surat->pengirim }}</td>
                                     <td>{{ $surat->instansi_pengirim }}</td>
                                     <td>{{ \Carbon\Carbon::parse($surat->tanggal_surat)->format('d M Y') }}</td>
@@ -125,7 +129,7 @@
                     </table>
                 </div>
             </div>
-            <div class="card-footer bg-white py-3">
+            {{-- <div class="card-footer bg-white py-3">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="text-muted small">
                         Menampilkan {{ count($suratMasuk) }} surat
@@ -146,6 +150,14 @@
                             </li>
                         </ul>
                     </nav>
+                </div>
+            </div> --}}
+            <div class="card-footer bg-white py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="text-muted small">
+                        Menampilkan {{ $suratMasuk->count() }} dari {{ $suratMasuk->total() }} surat
+                    </div>
+                    {{ $suratMasuk->links() }}
                 </div>
             </div>
         </div>

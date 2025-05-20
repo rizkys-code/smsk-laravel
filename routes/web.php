@@ -20,7 +20,6 @@ Route::post('/login', [LoginController::class, 'authenticate']);
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 
 Route::middleware(['auth'])->group(function () {
-    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('dashboard')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -30,11 +29,14 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
             Route::get('/{id}', [SuratMasukController::class, 'show'])->name('surat-masuk.show');
             Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit');
+            Route::get('/{id}/review', [SuratMasukController::class, 'review'])->name('surat-masuk.review');
+            Route::post('/{id}/review', [SuratMasukController::class, 'submitReview'])->name('surat-masuk.submit-review');
             Route::put('/{id}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
             Route::delete('/{id}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
             Route::get('/{id}/revision', [SuratMasukController::class, 'revision'])->name('surat-masuk.revision');
             Route::post('/{id}/revision', [SuratMasukController::class, 'processRevision'])->name('surat-masuk.process-revision');
             Route::post('/{id}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi');
+            Route::patch('/{id}/update-file', [SuratMasukController::class, 'updateFile'])->name('surat-masuk.update-file');
         });
 
 
