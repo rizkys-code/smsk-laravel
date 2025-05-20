@@ -210,7 +210,7 @@
                                             @php
                                                 $status = [
                                                     'menunggu',
-                                                    // 'diperbaiki',
+                                                    'diperbaiki',
                                                     // 'dicetak',
                                                     // 'draft',
                                                     'sudah_mengajukan',
