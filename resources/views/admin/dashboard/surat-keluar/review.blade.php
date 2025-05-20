@@ -36,9 +36,17 @@
                     <h5 class="mb-0 fw-bold text-primary">
                         <i class="bi bi-file-earmark-text me-2"></i>Detail Surat
                     </h5>
-                    <span class="badge {{ $surat->status === 'disetujui' ? 'bg-success' : ($surat->status === 'ditolak' ? 'bg-danger' : 'bg-warning') }} d-flex align-items-center gap-1 px-3 py-2">
-                        <i class="bi {{ $surat->status === 'disetujui' ? 'bi-check-circle' : ($surat->status === 'ditolak' ? 'bi-x-circle' : 'bi-hourglass-split') }}"></i>
-                        {{ ucfirst($surat->status) }}
+                    <span class="badge
+                        {{ $surat->status === 'disetujui' ? 'bg-success' :
+                          ($surat->status === 'ditolak' ? 'bg-danger' :
+                           ($surat->status === 'sudah_mengajukan' ? 'bg-warning' : 'bg-secondary')) }}
+                        d-flex align-items-center gap-1 px-3 py-2">
+                        <i class="bi
+                            {{ $surat->status === 'disetujui' ? 'bi-check-circle' :
+                              ($surat->status === 'ditolak' ? 'bi-x-circle' :
+                               ($surat->status === 'sudah_mengajukan' ? 'bi-send' : 'bi-hourglass-split')) }}">
+                        </i>
+                        {{ $surat->status === 'sudah_mengajukan' ? 'Sudah Mengajukan' : ucfirst($surat->status) }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -60,6 +68,7 @@
                                 <span class="text-muted small">Jenis Surat</span>
                                 @php
                                     $kodeSurat = [
+                                        'PP' => 'Pengajuan Parkir PKL',
                                         'SA' => 'Sertif Asisten / PKL',
                                         'SS' => 'Sertif Webinar / Workshop / Media Partner',
                                         'H' => 'Surat Perbaikan',
@@ -67,6 +76,10 @@
                                         'S' => 'SK Asisten / Keterangan',
                                         'U' => 'Surat Undangan',
                                         'K' => 'Surat Keputusan',
+                                        'SK' => 'Surat Keterangan',
+                                        'ST' => 'Surat Tugas',
+                                        'SPD' => 'Surat Perjalanan Dinas',
+                                        'SU' => 'Surat Umum',
                                     ];
                                 @endphp
                                 <span class="fw-medium">{{ $kodeSurat[$surat->jenis] ?? $surat->jenis }}</span>
@@ -122,7 +135,7 @@
             @endif
 
             <!-- Komentar Revisi -->
-            @if ($surat->komentarRevisi->count())
+            @if (isset($surat->komentarRevisi) && $surat->komentarRevisi->count())
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white py-3">
                         <h5 class="mb-0 fw-bold text-primary">
@@ -137,21 +150,21 @@
                                     <div class="d-flex justify-content-between align-items-center mb-2">
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="avatar-circle bg-primary text-white">
-                                                {{ substr($komentar->user->name, 0, 1) }}
+                                                {{ substr($komentar->user->name ?? 'U', 0, 1) }}
                                             </div>
-                                            <span class="fw-bold">{{ $komentar->user->name }}</span>
+                                            <span class="fw-bold">{{ $komentar->user->name ?? 'User' }}</span>
                                         </div>
                                         <small class="text-muted">
                                             <i class="bi bi-clock me-1"></i>{{ $komentar->created_at->format('d M Y, H:i') }}
                                         </small>
                                     </div>
                                     <div>{{ $komentar->komentar }}</div>
-                                    {{-- @if ($komentar->dokumen_revisi_path)
+                                    @if (isset($komentar->dokumen_revisi_path) && $komentar->dokumen_revisi_path)
                                         <a href="{{ Storage::url($komentar->dokumen_revisi_path) }}" target="_blank"
                                             class="btn btn-sm btn-outline-primary mt-2">
                                             <i class="bi bi-file-earmark-text"></i> Lihat Dokumen Revisi
                                         </a>
-                                    @endif --}}
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -174,26 +187,35 @@
                             </div>
                         </div>
                         <div class="timeline-item">
-                            <div class="timeline-marker {{ $surat->status !== 'menunggu' ? 'bg-success' : 'bg-secondary' }}"></div>
+                            <div class="timeline-marker
+                                {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak']) ? 'bg-success' : 'bg-secondary' }}">
+                            </div>
                             <div class="timeline-content">
                                 <h6 class="mb-0">Diajukan</h6>
-                                <small class="text-muted">{{ $surat->updated_at->format('d M Y, H:i') }}</small>
+                                <small class="text-muted">
+                                    {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak']) ?
+                                       $surat->updated_at->format('d M Y, H:i') : 'Belum diajukan' }}
+                                </small>
                             </div>
                         </div>
                         <div class="timeline-item">
-                            <div class="timeline-marker {{ $surat->status === 'disetujui' ? 'bg-success' : ($surat->status === 'ditolak' ? 'bg-danger' : 'bg-secondary') }}"></div>
+                            <div class="timeline-marker
+                                {{ $surat->status === 'disetujui' ? 'bg-success' :
+                                   ($surat->status === 'ditolak' ? 'bg-danger' : 'bg-secondary') }}">
+                            </div>
                             <div class="timeline-content">
                                 <h6 class="mb-0">
-                                    {{ $surat->status === 'disetujui' ? 'Disetujui' : ($surat->status === 'ditolak' ? 'Ditolak' : 'Menunggu Persetujuan') }}
+                                    {{ $surat->status === 'disetujui' ? 'Disetujui' :
+                                       ($surat->status === 'ditolak' ? 'Ditolak' : 'Menunggu Persetujuan') }}
                                 </h6>
-                                @if ($surat->status !== 'menunggu')
+                                @if ($surat->status === 'disetujui' || $surat->status === 'ditolak')
                                     <small class="text-muted">{{ $surat->updated_at->format('d M Y, H:i') }}</small>
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    @if ($surat->status === 'menunggu')
+                    @if ($surat->status === 'menunggu' || $surat->status === 'sudah_mengajukan')
                         <div class="mt-4">
                             <h6 class="fw-bold mb-3">Tindakan</h6>
                             <form action="{{ route('surat-keluar.approval', $surat->id) }}" method="POST">
@@ -212,16 +234,42 @@
                             </form>
                         </div>
                     @else
+                        <div class="alert alert-{{ $surat->status === 'disetujui' ? 'success' :
+                                                  ($surat->status === 'ditolak' ? 'danger' :
+                                                   ($surat->status === 'draft' ? 'secondary' : 'warning')) }}
+                                    mt-4 d-flex align-items-center flex-wrap">
+                            <i class="bi {{ $surat->status === 'disetujui' ? 'bi-check-circle-fill' :
+                                           ($surat->status === 'ditolak' ? 'bi-x-circle-fill' :
+                                            ($surat->status === 'draft' ? 'bi-pencil-fill' : 'bi-hourglass-split')) }} me-2"></i>
+                            <span>
+                                Surat ini
+                                @if($surat->status === 'disetujui')
+                                    telah <strong>disetujui</strong>
+                                @elseif($surat->status === 'ditolak')
+                                    telah <strong>ditolak</strong>
+                                @elseif($surat->status === 'draft')
+                                    masih berstatus <strong>draft</strong>
+                                @elseif($surat->status === 'dicetak')
+                                    telah <strong>dicetak</strong>
+                                @elseif($surat->status === 'diperbaiki')
+                                    sedang <strong>diperbaiki</strong>
+                                @else
+                                    berstatus <strong>{{ $surat->status }}</strong>
+                                @endif
 
-                    <div class="alert alert-{{ $surat->status === 'disetujui' ? 'success' : 'danger' }} mt-4 d-flex align-items-center flex-wrap">
-                        <i class="bi {{ $surat->status === 'disetujui' ? 'bi-check-circle-fill' : 'bi-x-circle-fill' }} me-2"></i>
-                        <span>
-                            Surat ini telah <strong class="text-capitalize">{{ $surat->status }}</strong>
-                            @if ($surat->status === 'ditolak' && $surat->alasan_ditolak)
-                                <span class="d-block mt-1">Alasan: {{ $surat->alasan_ditolak }}</span>
-                            @endif
-                        </span>
-                    </div>
+                                @if ($surat->status === 'ditolak' && isset($surat->alasan_ditolak) && $surat->alasan_ditolak)
+                                    <span class="d-block mt-1">Alasan: {{ $surat->alasan_ditolak }}</span>
+                                @endif
+                            </span>
+                        </div>
+                    @endif
+
+                    @if ($surat->status === 'disetujui')
+                        <div class="mt-3">
+                            <a href="{{ route('surat-keluar.print', $surat->id) }}" class="btn btn-primary w-100">
+                                <i class="bi bi-printer"></i> Cetak Surat
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -239,6 +287,11 @@
                         <div class="mb-3">
                             <label for="komentar" class="form-label">Komentar</label>
                             <textarea name="komentar" id="komentar" rows="4" class="form-control" required placeholder="Tulis komentar atau catatan revisi..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="dokumen_revisi" class="form-label">Dokumen Revisi (Opsional)</label>
+                            <input type="file" name="dokumen_revisi" id="dokumen_revisi" class="form-control" accept=".pdf,.doc,.docx">
+                            <div class="form-text">Format: PDF, DOC, DOCX (Maks. 2MB)</div>
                         </div>
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">

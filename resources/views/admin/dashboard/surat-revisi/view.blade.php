@@ -83,6 +83,10 @@
                                         @endif
                                     </td>
                                     <td>
+
+                                        {{-- @php
+                                            dd($surat);
+                                        @endphp --}}
                                         @if ($surat->komentar_revisi)
                                             <button type="button" class="btn btn-sm btn-outline-danger"
                                                 data-bs-toggle="popover" data-bs-placement="top" title="Komentar Revisi"
@@ -146,12 +150,12 @@
                                         @endif
 
                                         <!-- Pak Syarif Lihat Ulang -->
-                                        @if (Auth::user()->name == 'Pak Syarif' && $surat->status == 'diperbaiki')
-                                            <a href="{{ route('revisi.lihat', $surat->id) }}"
+                                        {{-- @if (Auth::user()->name == 'Pak Syarif' && $surat->status == 'diperbaiki') --}}
+                                            <a href="{{ route('surat-revisi.edit', $surat->id) }}"
                                                 class="btn btn-sm btn-info d-flex align-items-center justify-content-center gap-1">
                                                 <i class="bi bi-eye"></i> Review Ulang
                                             </a>
-                                        @endif
+                                        {{-- @endif --}}
 
                                         <!-- Semua user bisa lihat detail -->
                                         <a href="{{ route('surat-keluar.show', $surat->id) }}"
@@ -161,7 +165,8 @@
 
                                         <!-- Button Revisi Data - Direct to Form Page -->
                                         @if (Auth::user()->role == 'admin' && $surat->status == 'ditolak')
-                                            <a href="{{ route('surat-revisi.edit', $surat->id) }}" class="btn btn-sm btn-warning mt-1">
+                                            <a href="{{ route('surat-revisi.edit', $surat->id) }}"
+                                                class="btn btn-sm btn-warning mt-1">
                                                 <i class="bi bi-pencil-square"></i> Revisi Data
                                             </a>
                                         @endif

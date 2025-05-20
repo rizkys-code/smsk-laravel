@@ -51,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
         Route::prefix('surat-keluar')->group(function () {
             Route::get('/', [SuratKeluarController::class, 'index'])->name('surat-keluar');
             Route::post('/store', [SuratKeluarController::class, 'store'])->name('surat-keluar.store');
+            Route::get('/{id}/edit', [SuratKeluarController::class, 'edit'])->name('surat-keluar.edit');
+            Route::patch('/{id}', [SuratKeluarController::class, 'update'])->name('surat-keluar.update');
             Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('surat-keluar.show');
             Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
             Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review');

@@ -109,7 +109,10 @@ class SuratRevisiController extends Controller
 
     public function index()
     {
-        $revisiList = SuratKeluar::whereIn('status', ['ditolak', 'diperbaiki'])->get();
+        // $revisiList = SuratKeluar::whereIn('status', ['ditolak', 'diperbaiki'])->get();
+        $revisiList = SuratRevisi::with('surat')->latest()->get();
+        // dd($revisiList);
+
         return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
     }
 
@@ -133,6 +136,7 @@ class SuratRevisiController extends Controller
     public function edit($id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
         return view('admin.dashboard.surat-revisi.edit', compact('surat'));
     }
 

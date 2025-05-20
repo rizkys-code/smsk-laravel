@@ -10,36 +10,44 @@ use App\Models\SuratRevisi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class SuratKeluarController extends Controller
 {
     public function index()
     {
-
         if (!Auth::check()) {
             return redirect()->route('login')->with('loginError', 'Login Required!');
         }
 
-        // $dataSurat = SuratKeluar::with(['lampiran', 'pembuat', 'penyetuju'])->latest()->get();
         $dataSurat = SuratKeluar::orderBy('created_at', 'desc')->paginate(10);
 
+        // Get next nomor surat for form
+        $nextNomorSurat = $this->generateNextNomorSurat();
 
-        return view('admin.dashboard.surat-keluar.view', compact('dataSurat'));
+        // Define kode surat for display
+        $kodeSurat = [
+            'PP' => 'Pengajuan Parkir PKL',
+            'SA' => 'Sertifikat Asisten',
+            'U' => 'Undangan',
+            'SK' => 'Surat Keterangan',
+            'ST' => 'Surat Tugas',
+            'SPD' => 'Surat Perjalanan Dinas',
+            'SU' => 'Surat Umum',
+        ];
+
+        return view('admin.dashboard.surat-keluar.view', compact('dataSurat', 'nextNomorSurat', 'kodeSurat'));
     }
-
 
     public function store(Request $request)
     {
-
         $request->validate([
             'jenis_surat' => 'required',
             'perihal' => 'required',
             'tanggal' => 'required|date',
-            // 'lampiran' => 'required|integer',
             'isi_surat' => 'required|string',
             'lampiran' => 'array',
         ]);
-
 
         $bulan = date('m', strtotime($request->tanggal));
         $tahun = date('y', strtotime($request->tanggal));
@@ -49,53 +57,139 @@ class SuratKeluarController extends Controller
 
         $nomorSurat = "$request->jenis_surat/UBL/010/$urutan/$bulan/$tahun";
 
-        // Simpan ke surat_keluar
-        $surat = SuratKeluar::create([
+        // Determine status based on action
+        $status = 'menunggu'; // Default status
+
+        if ($request->aksi === 'simpan_draft') {
+            $status = 'draft';
+        } else if ($request->aksi === 'ajukan') {
+            $status = 'sudah_mengajukan';
+        } else if ($request->aksi === 'langsung_cetak') {
+            $status = 'disetujui';
+        }
+
+        // Create base letter data
+        $suratData = [
             'nomor_surat' => $nomorSurat,
             'perihal' => $request->perihal,
             'isi' => $request->isi_surat,
             'tanggal' => $request->tanggal,
             'jenis' => $request->jenis_surat,
-            'status' => $request->aksi === 'langsung_cetak' ? 'disetujui' : 'menunggu',
+            'status' => $status,
             'user_id' => auth()->id(),
-        ]);
+        ];
 
-        // Simpan lampiran dinamis
-        if ($request->has('lampiran_data')) {
-            $lampiranArray = $request->lampiran;
-            if (is_string($lampiranArray)) {
-                $lampiranArray = json_decode($lampiranArray, true) ?? [];
-            }
-            if (is_array($lampiranArray)) {
-                foreach ($lampiranArray as $index => $item) {
-                    LampiranSurat::create([
-                        'surat_id' => $surat->id,
-                        'label' => $item['label'],
-                        'isi' => $item['isi'],
-                        'urutan_grup' => $index + 1,
-                    ]);
+        // Add additional fields based on letter type
+        switch ($request->jenis_surat) {
+            case 'PP': // Pengajuan Parkir PKL
+                if ($request->has('ditujukan_kepada')) {
+                    $suratData['ditujukan_kepada'] = $request->ditujukan_kepada;
                 }
-            }
+                if ($request->has('jabatan_penerima')) {
+                    $suratData['jabatan_penerima'] = $request->jabatan_penerima;
+                }
+                if ($request->has('jumlah_bulan')) {
+                    $suratData['jumlah_bulan'] = $request->jumlah_bulan;
+                }
+                break;
+
+            case 'SA': // Sertif Asisten
+                if ($request->has('nama_kegiatan')) {
+                    $suratData['nama_kegiatan'] = $request->nama_kegiatan;
+                }
+                if ($request->has('semester')) {
+                    $suratData['semester'] = $request->semester;
+                }
+                if ($request->has('tahun_ajaran')) {
+                    $suratData['tahun_ajaran'] = $request->tahun_ajaran;
+                }
+                break;
+
+            case 'U': // Undangan
+                if ($request->has('ditujukan_kepada')) {
+                    $suratData['ditujukan_kepada'] = $request->ditujukan_kepada;
+                }
+                if ($request->has('jabatan_penerima')) {
+                    $suratData['jabatan_penerima'] = $request->jabatan_penerima;
+                }
+                if ($request->has('nama_kegiatan')) {
+                    $suratData['nama_kegiatan'] = $request->nama_kegiatan;
+                }
+                if ($request->has('tempat_kegiatan')) {
+                    $suratData['tempat_kegiatan'] = $request->tempat_kegiatan;
+                }
+                if ($request->has('tanggal_kegiatan')) {
+                    $suratData['tanggal_kegiatan'] = $request->tanggal_kegiatan;
+                }
+                if ($request->has('waktu_mulai')) {
+                    $suratData['waktu_mulai'] = $request->waktu_mulai;
+                }
+                if ($request->has('waktu_selesai')) {
+                    $suratData['waktu_selesai'] = $request->waktu_selesai;
+                }
+                break;
         }
-        // if ($request->filled('lampiran') && is_numeric($request->lampiran)) {
-        //     $jumlahLampiran = (int) $request->lampiran;
-        //     for ($i = 1; $i <= $jumlahLampiran; $i++) {
-        //         LampiranSurat::create([
-        //             'surat_id' => $surat->id,
-        //             'label' => 'Lampiran ' . $i,
-        //             'isi' => '', // Isi bisa diisi sesuai kebutuhan, atau dikosongkan
-        //             'urutan_grup' => $i,
-        //         ]);
-        //     }
-        // }
+
+        // Simpan ke surat_keluar
+        $surat = SuratKeluar::create($suratData);
+
+        // Process additional data based on letter type
+        switch ($request->jenis_surat) {
+            case 'PP': // Pengajuan Parkir PKL
+                if ($request->has('pengaju') && is_array($request->pengaju)) {
+                    foreach ($request->pengaju as $index => $pengaju) {
+                        LampiranSurat::create([
+                            'surat_id' => $surat->id,
+                            'label' => 'Pengaju ' . ($index + 1),
+                            'isi' => json_encode($pengaju),
+                            'urutan_grup' => $index + 1,
+                        ]);
+                    }
+                }
+                break;
+
+            case 'SA': // Sertif Asisten
+                if ($request->has('asisten') && is_array($request->asisten)) {
+                    foreach ($request->asisten as $index => $asisten) {
+                        LampiranSurat::create([
+                            'surat_id' => $surat->id,
+                            'label' => 'Asisten ' . ($index + 1),
+                            'isi' => json_encode($asisten),
+                            'urutan_grup' => $index + 1,
+                        ]);
+                    }
+                }
+                break;
+
+            default:
+                // Simpan lampiran dinamis
+                if ($request->has('lampiran') && is_array($request->lampiran)) {
+                    foreach ($request->lampiran as $index => $item) {
+                        if (!empty($item['label']) && !empty($item['isi'])) {
+                            LampiranSurat::create([
+                                'surat_id' => $surat->id,
+                                'label' => $item['label'],
+                                'isi' => $item['isi'],
+                                'urutan_grup' => $index + 1,
+                            ]);
+                        }
+                    }
+                }
+                break;
+        }
 
         if ($request->aksi === 'langsung_cetak') {
             return redirect()->route('surat-keluar.print', $surat->id);
         }
 
-        return redirect()->route('surat-keluar')->with('success', 'Surat berhasil disimpan dan menunggu persetujuan.');
-    }
+        $statusMessages = [
+            'draft' => 'Surat berhasil disimpan sebagai draft.',
+            'sudah_mengajukan' => 'Surat berhasil diajukan untuk persetujuan.',
+            'menunggu' => 'Surat berhasil disimpan dan menunggu persetujuan.',
+        ];
 
+        return redirect()->route('surat-keluar')->with('success', $statusMessages[$status]);
+    }
 
     public function show($id)
     {
@@ -103,12 +197,190 @@ class SuratKeluarController extends Controller
         return view('admin.dashboard.surat-keluar.detail', compact('surat'));
     }
 
+    public function edit($id)
+    {
+        $surat = SuratKeluar::with('lampiran')->findOrFail($id);
+
+        // Only allow editing of drafts
+        if ($surat->status !== 'draft') {
+            return redirect()->route('surat-keluar')->with('error', 'Hanya surat dengan status draft yang dapat diedit.');
+        }
+
+        // Define kode surat for display
+        $kodeSurat = [
+            'PP' => 'Pengajuan Parkir PKL',
+            'SA' => 'Sertifikat Asisten',
+            'U' => 'Undangan',
+            'SK' => 'Surat Keterangan',
+            'ST' => 'Surat Tugas',
+            'SPD' => 'Surat Perjalanan Dinas',
+            'SU' => 'Surat Umum',
+        ];
+
+        return view('admin.dashboard.surat-keluar.edit', compact('surat', 'kodeSurat'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $suratKeluar = SuratKeluar::findOrFail($id);
+
+        // Only allow updating of drafts
+        if ($suratKeluar->status !== 'draft') {
+            return redirect()->route('surat-keluar')->with('error', 'Hanya surat dengan status draft yang dapat diperbarui.');
+        }
+
+        $request->validate([
+            'perihal' => 'required',
+            'tanggal' => 'required|date',
+            'isi_surat' => 'required|string',
+        ]);
+
+        // Determine status based on action
+        $status = 'draft'; // Default status
+
+        if ($request->aksi === 'ajukan') {
+            $status = 'sudah_mengajukan';
+        } else if ($request->aksi === 'langsung_cetak') {
+            $status = 'disetujui';
+        }
+
+        // Update basic letter information
+        $updateData = [
+            'perihal' => $request->perihal,
+            'isi' => $request->isi_surat,
+            'tanggal' => $request->tanggal,
+            'status' => $status,
+        ];
+
+        // Update additional fields based on letter type
+        switch ($suratKeluar->jenis) {
+            case 'PP': // Pengajuan Parkir PKL
+                if ($request->has('ditujukan_kepada')) {
+                    $updateData['ditujukan_kepada'] = $request->ditujukan_kepada;
+                }
+                if ($request->has('jabatan_penerima')) {
+                    $updateData['jabatan_penerima'] = $request->jabatan_penerima;
+                }
+                if ($request->has('jumlah_bulan')) {
+                    $updateData['jumlah_bulan'] = $request->jumlah_bulan;
+                }
+                break;
+
+            case 'SA': // Sertif Asisten
+                if ($request->has('nama_kegiatan')) {
+                    $updateData['nama_kegiatan'] = $request->nama_kegiatan;
+                }
+                if ($request->has('semester')) {
+                    $updateData['semester'] = $request->semester;
+                }
+                if ($request->has('tahun_ajaran')) {
+                    $updateData['tahun_ajaran'] = $request->tahun_ajaran;
+                }
+                break;
+
+            case 'U': // Undangan
+                if ($request->has('ditujukan_kepada')) {
+                    $updateData['ditujukan_kepada'] = $request->ditujukan_kepada;
+                }
+                if ($request->has('jabatan_penerima')) {
+                    $updateData['jabatan_penerima'] = $request->jabatan_penerima;
+                }
+                if ($request->has('nama_kegiatan')) {
+                    $updateData['nama_kegiatan'] = $request->nama_kegiatan;
+                }
+                if ($request->has('tempat_kegiatan')) {
+                    $updateData['tempat_kegiatan'] = $request->tempat_kegiatan;
+                }
+                if ($request->has('tanggal_kegiatan')) {
+                    $updateData['tanggal_kegiatan'] = $request->tanggal_kegiatan;
+                }
+                if ($request->has('waktu_mulai')) {
+                    $updateData['waktu_mulai'] = $request->waktu_mulai;
+                }
+                if ($request->has('waktu_selesai')) {
+                    $updateData['waktu_selesai'] = $request->waktu_selesai;
+                }
+                break;
+        }
+
+        $suratKeluar->update($updateData);
+
+        // Delete existing lampiran
+        LampiranSurat::where('surat_id', $suratKeluar->id)->delete();
+
+        // Process additional data based on letter type
+        switch ($suratKeluar->jenis) {
+            case 'PP': // Pengajuan Parkir PKL
+                if ($request->has('pengaju') && is_array($request->pengaju)) {
+                    foreach ($request->pengaju as $index => $pengaju) {
+                        if (!empty($pengaju['nama']) && !empty($pengaju['npm'])) {
+                            LampiranSurat::create([
+                                'surat_id' => $suratKeluar->id,
+                                'label' => 'Pengaju ' . ($index + 1),
+                                'isi' => json_encode($pengaju),
+                                'urutan_grup' => $index + 1,
+                            ]);
+                        }
+                    }
+                }
+                break;
+
+            case 'SA': // Sertif Asisten
+                if ($request->has('asisten') && is_array($request->asisten)) {
+                    foreach ($request->asisten as $index => $asisten) {
+                        if (!empty($asisten['nama']) && !empty($asisten['npm'])) {
+                            LampiranSurat::create([
+                                'surat_id' => $suratKeluar->id,
+                                'label' => 'Asisten ' . ($index + 1),
+                                'isi' => json_encode($asisten),
+                                'urutan_grup' => $index + 1,
+                            ]);
+                        }
+                    }
+                }
+                break;
+
+            default:
+                // Simpan lampiran dinamis
+                if ($request->has('lampiran') && is_array($request->lampiran)) {
+                    foreach ($request->lampiran as $index => $item) {
+                        if (!empty($item['label']) && !empty($item['isi'])) {
+                            LampiranSurat::create([
+                                'surat_id' => $suratKeluar->id,
+                                'label' => $item['label'],
+                                'isi' => $item['isi'],
+                                'urutan_grup' => $index + 1,
+                            ]);
+                        }
+                    }
+                }
+                break;
+        }
+
+        if ($request->aksi === 'langsung_cetak') {
+            return redirect()->route('surat-keluar.print', $suratKeluar->id);
+        }
+
+        $statusMessages = [
+            'draft' => 'Draft surat berhasil diperbarui.',
+            'sudah_mengajukan' => 'Surat berhasil diajukan untuk persetujuan.',
+            'disetujui' => 'Surat berhasil disetujui dan siap dicetak.',
+        ];
+
+        return redirect()->route('surat-keluar')->with('success', $statusMessages[$status]);
+    }
+
     public function destroy($id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
+        // Delete associated lampiran
+        LampiranSurat::where('surat_id', $surat->id)->delete();
+
+        // Delete the letter
         $surat->delete();
 
-        return redirect()->route('surat-keluar')->with('status', 'Surat berhasil dihapus.');
+        return redirect()->route('surat-keluar')->with('success', 'Surat berhasil dihapus.');
     }
 
     public function review($id)
@@ -134,42 +406,7 @@ class SuratKeluarController extends Controller
 
         $pdf = PDF::loadView('admin.dashboard.surat-keluar.print', compact('surat'));
         return $pdf->download('Surat-Keluar-' . $safeNomorSurat . '.pdf');
-
-        // $pdf = PDF::loadView('admin.dashboard.surat-keluar.print', compact('surat'));
-        // return $pdf->download('Surat-Keluar-' . $surat->nomor_surat . '.pdf');
     }
-    // public function approval(Request $request, $id)
-    // {
-    //     $surat = SuratKeluar::findOrFail($id);
-
-    //     $request->validate([
-    //         'status' => 'required|in:disetujui,ditolak',
-    //         'komentar_revisi' => 'nullable|string',
-    //         'dokumen_revisi' => 'nullable|file|mimes:pdf,doc,docx,jpg,png',
-    //     ]);
-
-    //     $surat->status = $request->input('status');
-    //     $surat->save();
-
-    //     // Jika surat ditolak dan ada komentar revisi
-    //     if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
-    //         $komentar = new KomentarRevisi();
-    //         $komentar->surat_id = $surat->id;
-    //         $komentar->komentar = $request->input('komentar_revisi');
-    //         $komentar->created_by = auth()->id();
-
-    //         // Jika ada file dokumen revisi, simpan dan set path
-    //         if ($request->hasFile('dokumen_revisi')) {
-    //             $path = $request->file('dokumen_revisi')->store('dokumen_revisi', 'public');
-    //             $komentar->dokumen_revisi_path = $path;
-    //         }
-
-    //         $komentar->save();
-    //     }
-
-    //     return redirect()->route('surat-keluar.review', $id)
-    //         ->with('success', 'Status surat berhasil diperbarui.');
-    // }
 
     public function approval(Request $request, $id)
     {
@@ -182,27 +419,16 @@ class SuratKeluarController extends Controller
         ]);
 
         $surat->status = $request->input('status');
+
+        // If approved, set signed_by and signed_at
+        if ($request->status === 'disetujui') {
+            $surat->signed_by = auth()->id();
+            $surat->signed_at = now();
+        }
+
         $surat->save();
 
-        // dd($surat, $komentar);
-
-        $data = [
-            'surat_id' => $surat->id,
-            'nomor_surat' => $surat->nomor_surat,
-            'perihal' => $surat->perihal,
-            'isi' => $surat->isi,
-            'lampiran' => $surat->lampiran,
-            'status' => 'ditolak',
-            'jenis' => $surat->jenis,
-            'komentar_revisi' => $komentar->komentar,
-            'created_by' => auth()->id(),
-        ];
-
-        // dd($data);
-
-        // if ($request->status === 'ditolak' && $request->filled('komentar_revisi')) {
-        if ($request->status === 'ditolak') {
-            // dd('ditolak loh');
+        if ($request->status === 'ditolak' && $komentar) {
             SuratRevisi::create([
                 'surat_id' => $surat->id,
                 'nomor_surat' => $surat->nomor_surat,
@@ -229,16 +455,35 @@ class SuratKeluarController extends Controller
 
         $path = null;
         if ($request->hasFile('dokumen_revisi')) {
-            $path = $request->file('dokumen_revisi')->store('revisi_dokumen');
+            $path = $request->file('dokumen_revisi')->store('revisi_dokumen', 'public');
         }
 
         KomentarRevisi::create([
             'surat_id' => $id,
             'komentar' => $request->komentar,
             'created_by' => auth()->id(),
-            // 'dokumen_revisi_path' => $path,
+            'dokumen_revisi_path' => $path,
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan.');
+    }
+
+    private function generateNextNomorSurat()
+    {
+        // Get current year and month
+        $year = date('y');
+        $month = date('m');
+
+        // Get last letter number for this month
+        $count = SuratKeluar::whereYear('tanggal', date('Y'))
+            ->whereMonth('tanggal', date('m'))
+            ->count();
+
+        $urutan = str_pad($count + 1, 3, '0', STR_PAD_LEFT);
+
+        // Format: jenis/UBL/010/urutan/bulan/tahun
+        // Example: SA/UBL/010/001/05/25
+        // We'll use a placeholder for jenis since it will be selected by the user
+        return "XX/UBL/010/$urutan/$month/$year";
     }
 }

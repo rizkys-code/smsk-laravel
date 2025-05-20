@@ -243,8 +243,5 @@ class SuratMasukController extends Controller
         return redirect()->route('surat-masuk.show', $id)->with('status', 'Review surat berhasil disimpan.');
     }
 
-
-
-
 }
 
