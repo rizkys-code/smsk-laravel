@@ -39,14 +39,17 @@
                     <span class="badge
                         {{ $surat->status === 'disetujui' ? 'bg-success' :
                           ($surat->status === 'ditolak' ? 'bg-danger' :
-                           ($surat->status === 'sudah_mengajukan' ? 'bg-warning' : 'bg-secondary')) }}
+                           ($surat->status === 'sudah_mengajukan' ? 'bg-warning' :
+                            ($surat->status === 'diperbaiki' ? 'bg-info' : 'bg-secondary'))) }}
                         d-flex align-items-center gap-1 px-3 py-2">
                         <i class="bi
                             {{ $surat->status === 'disetujui' ? 'bi-check-circle' :
                               ($surat->status === 'ditolak' ? 'bi-x-circle' :
-                               ($surat->status === 'sudah_mengajukan' ? 'bi-send' : 'bi-hourglass-split')) }}">
+                               ($surat->status === 'sudah_mengajukan' ? 'bi-send' :
+                                ($surat->status === 'diperbaiki' ? 'bi-tools' : 'bi-hourglass-split'))) }}">
                         </i>
-                        {{ $surat->status === 'sudah_mengajukan' ? 'Sudah Mengajukan' : ucfirst($surat->status) }}
+                        {{ $surat->status === 'sudah_mengajukan' ? 'Sudah Mengajukan' :
+                           ($surat->status === 'diperbaiki' ? 'Sedang Diperbaiki' : ucfirst($surat->status)) }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -188,12 +191,12 @@
                         </div>
                         <div class="timeline-item">
                             <div class="timeline-marker
-                                {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak']) ? 'bg-success' : 'bg-secondary' }}">
+                                {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak', 'diperbaiki']) ? 'bg-success' : 'bg-secondary' }}">
                             </div>
                             <div class="timeline-content">
                                 <h6 class="mb-0">Diajukan</h6>
                                 <small class="text-muted">
-                                    {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak']) ?
+                                    {{ in_array($surat->status, ['sudah_mengajukan', 'menunggu', 'disetujui', 'ditolak', 'diperbaiki']) ?
                                        $surat->updated_at->format('d M Y, H:i') : 'Belum diajukan' }}
                                 </small>
                             </div>
@@ -201,21 +204,23 @@
                         <div class="timeline-item">
                             <div class="timeline-marker
                                 {{ $surat->status === 'disetujui' ? 'bg-success' :
-                                   ($surat->status === 'ditolak' ? 'bg-danger' : 'bg-secondary') }}">
+                                   ($surat->status === 'ditolak' ? 'bg-danger' :
+                                    ($surat->status === 'diperbaiki' ? 'bg-info' : 'bg-secondary')) }}">
                             </div>
                             <div class="timeline-content">
                                 <h6 class="mb-0">
                                     {{ $surat->status === 'disetujui' ? 'Disetujui' :
-                                       ($surat->status === 'ditolak' ? 'Ditolak' : 'Menunggu Persetujuan') }}
+                                       ($surat->status === 'ditolak' ? 'Ditolak' :
+                                        ($surat->status === 'diperbaiki' ? 'Sedang Diperbaiki' : 'Menunggu Persetujuan')) }}
                                 </h6>
-                                @if ($surat->status === 'disetujui' || $surat->status === 'ditolak')
+                                @if ($surat->status === 'disetujui' || $surat->status === 'ditolak' || $surat->status === 'diperbaiki')
                                     <small class="text-muted">{{ $surat->updated_at->format('d M Y, H:i') }}</small>
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    @if ($surat->status === 'menunggu' || $surat->status === 'sudah_mengajukan')
+                    @if ($surat->status === 'menunggu' || $surat->status === 'sudah_mengajukan' || $surat->status === 'diperbaiki')
                         <div class="mt-4">
                             <h6 class="fw-bold mb-3">Tindakan</h6>
                             <form action="{{ route('surat-keluar.approval', $surat->id) }}" method="POST">
@@ -233,26 +238,20 @@
                                 </div>
                             </form>
                         </div>
-                    @else
-                        <div class="alert alert-{{ $surat->status === 'disetujui' ? 'success' :
-                                                  ($surat->status === 'ditolak' ? 'danger' :
-                                                   ($surat->status === 'draft' ? 'secondary' : 'warning')) }}
+                    @elseif ($surat->status !== 'disetujui')
+                        <div class="alert alert-{{ $surat->status === 'ditolak' ? 'danger' :
+                                                  ($surat->status === 'draft' ? 'secondary' : 'warning') }}
                                     mt-4 d-flex align-items-center flex-wrap">
-                            <i class="bi {{ $surat->status === 'disetujui' ? 'bi-check-circle-fill' :
-                                           ($surat->status === 'ditolak' ? 'bi-x-circle-fill' :
-                                            ($surat->status === 'draft' ? 'bi-pencil-fill' : 'bi-hourglass-split')) }} me-2"></i>
+                            <i class="bi {{ $surat->status === 'ditolak' ? 'bi-x-circle-fill' :
+                                           ($surat->status === 'draft' ? 'bi-pencil-fill' : 'bi-hourglass-split') }} me-2"></i>
                             <span>
                                 Surat ini
-                                @if($surat->status === 'disetujui')
-                                    telah <strong>disetujui</strong>
-                                @elseif($surat->status === 'ditolak')
+                                @if($surat->status === 'ditolak')
                                     telah <strong>ditolak</strong>
                                 @elseif($surat->status === 'draft')
                                     masih berstatus <strong>draft</strong>
                                 @elseif($surat->status === 'dicetak')
                                     telah <strong>dicetak</strong>
-                                @elseif($surat->status === 'diperbaiki')
-                                    sedang <strong>diperbaiki</strong>
                                 @else
                                     berstatus <strong>{{ $surat->status }}</strong>
                                 @endif
@@ -261,6 +260,11 @@
                                     <span class="d-block mt-1">Alasan: {{ $surat->alasan_ditolak }}</span>
                                 @endif
                             </span>
+                        </div>
+                    @else
+                        <div class="alert alert-success mt-4 d-flex align-items-center">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <span>Surat ini telah <strong>disetujui</strong></span>
                         </div>
                     @endif
 
