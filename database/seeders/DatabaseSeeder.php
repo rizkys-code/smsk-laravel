@@ -17,12 +17,22 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'username' => 'admin', // Username
+            'username' => 'admin',
             'password' => bcrypt('admin'),
-            'role' => 'admin', // Role
-            'name' => 'spv', // Name
-            'created_at' => Carbon::now(), // Timestamp for created_at
-            'updated_at' => Carbon::now(), // Timestamp for updated_at
+            'role' => 'admin',
+            'name' => 'spv',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
         ]);
+
+        User::create([
+            'username' => 'superadmin',
+            'password' => bcrypt('superadmin'),
+            'role' => 'superadmin',
+            'name' => 'Kepala Lab ICT',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+        ]);
+
     }
 }
