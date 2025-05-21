@@ -468,7 +468,7 @@
                             <span class="input-group-text bg-light">
                                 <i class="bi bi-briefcase"></i>
                             </span>
-                            <input type="text" name="jabatan_penerima" id="jabatan_penerima" class="form-control" value="Universitas Indonesia" required>
+                            <input type="text" name="jabatan_penerima" id="jabatan_penerima" class="form-control" value="Universitas Budi Luhur" required>
                         </div>
                     </div>
 
@@ -487,7 +487,7 @@
                         <label for="isi_surat" class="form-label fw-medium">Isi Surat</label>
                         <textarea name="isi_surat" id="isi_surat" rows="5" class="form-control" readonly>Dengan hormat,
 
-Sehubungan dengan kegiatan Praktik Kerja Lapangan (PKL) mahasiswa Fasilkom UI di lingkungan Universitas Indonesia, dengan ini kami mengajukan permohonan flat rate parkir untuk mahasiswa tersebut selama periode PKL.
+Sehubungan dengan kegiatan Praktik Kerja Lapangan (PKL) mahasiswa Fasilkom UI di lingkungan Universitas Budi Luhur, dengan ini kami mengajukan permohonan flat rate parkir untuk mahasiswa tersebut selama periode PKL.
 
 Adapun mahasiswa yang mengajukan flat rate parkir adalah sebagaimana terlampir.
 
@@ -986,7 +986,7 @@ Demikian surat permohonan ini kami sampaikan. Atas perhatian dan kerjasamanya, k
                 previewHtml += `
                 <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <h4 style="margin-bottom: 5px;">UNIVERSITAS INDONESIA</h4>
+                        <h4 style="margin-bottom: 5px;">UNIVERSITAS BUDI LURUH</h4>
                         <h3 style="margin-top: 0; margin-bottom: 5px;">FAKULTAS ILMU KOMPUTER</h3>
                         <p style="margin-top: 0; font-size: 14px;">Jl. Ciledug Raya Petukangan Utara Jakarta Selatan</p>
                         <hr style="border-top: 3px solid #000; margin-top: 10px;">
