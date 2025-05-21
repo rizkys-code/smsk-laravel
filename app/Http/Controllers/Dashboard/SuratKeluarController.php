@@ -41,12 +41,20 @@ class SuratKeluarController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'jenis_surat' => 'required',
             'perihal' => 'required',
             'tanggal' => 'required|date',
+            'ditujukan_kepada' => 'required',
+            'jabatan_penerima' => 'required',
+            'nama_kegiatan' => 'required',
+            'tempat_kegiatan' => 'required',
+            'tanggal_kegiatan' => 'required|date',
+            'waktu_mulai' => 'required',
+            'waktu_selesai' => 'required',
             'isi_surat' => 'required|string',
-            'lampiran' => 'array',
+            'lampiran' => 'required',
         ]);
 
         $bulan = date('m', strtotime($request->tanggal));
@@ -133,9 +141,8 @@ class SuratKeluarController extends Controller
         // Simpan ke surat_keluar
         $surat = SuratKeluar::create($suratData);
 
-        // Process additional data based on letter type
         switch ($request->jenis_surat) {
-            case 'PP': // Pengajuan Parkir PKL
+            case 'PP':
                 if ($request->has('pengaju') && is_array($request->pengaju)) {
                     foreach ($request->pengaju as $index => $pengaju) {
                         LampiranSurat::create([
@@ -148,7 +155,7 @@ class SuratKeluarController extends Controller
                 }
                 break;
 
-            case 'SA': // Sertif Asisten
+            case 'SA':
                 if ($request->has('asisten') && is_array($request->asisten)) {
                     foreach ($request->asisten as $index => $asisten) {
                         LampiranSurat::create([
@@ -160,6 +167,41 @@ class SuratKeluarController extends Controller
                     }
                 }
                 break;
+
+            case 'U':
+                if ($request->has('lampiran')) {
+                    LampiranSurat::create([
+                        'surat_id' => $surat->id,
+                        'label' => 'Jumlah Lampiran',
+                        'isi' => $request->lampiran,
+                        'urutan_grup' => 1,
+                    ]);
+                }
+
+                LampiranSurat::create([
+                    'surat_id' => $surat->id,
+                    'label' => 'Detail Kegiatan',
+                    'isi' => json_encode([
+                        'nama_kegiatan' => $request->nama_kegiatan,
+                        'tempat_kegiatan' => $request->tempat_kegiatan,
+                        'tanggal_kegiatan' => $request->tanggal_kegiatan,
+                        'waktu_mulai' => $request->waktu_mulai,
+                        'waktu_selesai' => $request->waktu_selesai
+                    ]),
+                    'urutan_grup' => 2,
+                ]);
+
+                LampiranSurat::create([
+                    'surat_id' => $surat->id,
+                    'label' => 'Penerima Surat',
+                    'isi' => json_encode([
+                        'nama' => $request->ditujukan_kepada,
+                        'jabatan' => $request->jabatan_penerima
+                    ]),
+                    'urutan_grup' => 3,
+                ]);
+                break;
+
 
             default:
                 // Simpan lampiran dinamis
