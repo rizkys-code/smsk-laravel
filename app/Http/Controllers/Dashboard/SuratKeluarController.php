@@ -46,16 +46,30 @@ class SuratKeluarController extends Controller
             'jenis_surat' => 'required',
             'perihal' => 'required',
             'tanggal' => 'required|date',
-            'ditujukan_kepada' => 'required',
-            'jabatan_penerima' => 'required',
-            'nama_kegiatan' => 'required',
-            'tempat_kegiatan' => 'required',
-            'tanggal_kegiatan' => 'required|date',
-            'waktu_mulai' => 'required',
-            'waktu_selesai' => 'required',
-            'isi_surat' => 'required|string',
-            'lampiran' => 'required',
+            'ditujukan_kepada' => 'sometimes',
+            'jabatan_penerima' => 'sometimes',
+            'nama_kegiatan' => 'sometimes',
+            'tempat_kegiatan' => 'sometimes',
+            'tanggal_kegiatan' => 'sometimes|date',
+            'waktu_mulai' => 'sometimes',
+            'waktu_selesai' => 'sometimes',
+            'isi_surat' => 'sometimes|string',
+            'lampiran' => 'sometimes',
+        ], [
+            'jenis_surat.required' => 'Jenis surat harus diisi',
+            'perihal.required' => 'Perihal surat harus diisi',
+            'tanggal.required' => 'Tanggal surat harus diisi',
+            'ditujukan_kepada.required' => 'Nama penerima surat harus diisi',
+            'jabatan_penerima.required' => 'Jabatan penerima surat harus diisi',
+            'nama_kegiatan.required' => 'Nama kegiatan harus diisi',
+            'tempat_kegiatan.required' => 'Tempat pelaksanaan kegiatan harus diisi',
+            'tanggal_kegiatan.required' => 'Tanggal pelaksanaan kegiatan harus diisi',
+            'waktu_mulai.required' => 'Waktu mulai kegiatan harus diisi',
+            'waktu_selesai.required' => 'Waktu selesai kegiatan harus diisi',
+            'isi_surat.required' => 'Isi surat harus diisi',
+            'lampiran.required' => 'Lampiran surat harus diisi',
         ]);
+
 
         $bulan = date('m', strtotime($request->tanggal));
         $tahun = date('y', strtotime($request->tanggal));
@@ -65,8 +79,7 @@ class SuratKeluarController extends Controller
 
         $nomorSurat = "$request->jenis_surat/UBL/010/$urutan/$bulan/$tahun";
 
-        // Determine status based on action
-        $status = 'menunggu'; // Default status
+        $status = 'menunggu'; 
 
         if ($request->aksi === 'simpan_draft') {
             $status = 'draft';
