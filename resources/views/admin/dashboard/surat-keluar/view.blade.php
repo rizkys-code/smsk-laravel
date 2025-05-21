@@ -217,7 +217,7 @@
                                                 ];
                                             @endphp
 
-                                            @if (in_array($surat->status, $status))
+                                            @if (in_array($surat->status, $status) && auth()->user()->role === 'superadmin')
                                                 <a href="{{ route('surat-keluar.review', $surat->id) }}"
                                                     class="btn btn-sm btn-outline-warning" data-bs-toggle="tooltip"
                                                     title="Review">

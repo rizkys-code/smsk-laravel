@@ -97,7 +97,7 @@ class SuratMasukController extends Controller
 
     public function revision($id)
     {
-        if (!auth()->user()->hasRole('super-admin')) {
+        if (auth()->user()->role !== 'superadmin') {
             return redirect()->route('surat-masuk')->with('error', 'Anda tidak memiliki akses untuk melakukan revisi.');
         }
 
@@ -107,7 +107,7 @@ class SuratMasukController extends Controller
 
     public function processRevision(Request $request, $id)
     {
-        if (!auth()->user()->hasRole('super-admin')) {
+        if (auth()->user()->role !== 'superadmin') {
             return redirect()->route('surat-masuk')->with('error', 'Anda tidak memiliki akses untuk melakukan revisi.');
         }
 
@@ -163,6 +163,8 @@ class SuratMasukController extends Controller
             'instansi.required' => 'Instansi pengirim harus diisi.',
             'instansi.string' => 'Instansi pengirim harus berupa string.',
         ]);
+
+
 
         if ($request->hasFile('file')) {
             $filePath = $request->file('file')->store('surat_masuk', 'public');

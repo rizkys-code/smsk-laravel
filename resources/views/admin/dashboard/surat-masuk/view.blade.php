@@ -14,9 +14,9 @@
                 <h2 class="fw-bold text-primary mb-0">Surat Masuk</h2>
                 <p class="text-muted">Kelola dan pantau semua surat masuk</p>
             </div>
-            <a href="#form-tambah" class="btn btn-primary d-flex align-items-center gap-2">
+            <button type="button" class="btn btn-primary d-flex align-items-center gap-2" id="btnTambahSurat">
                 <i class="bi bi-plus-circle"></i> Tambah Surat Masuk
-            </a>
+            </button>
         </div>
 
         <!-- Status Alert -->
@@ -90,7 +90,7 @@
                                                 <i class="bi bi-pencil"></i>
                                             </a>
 
-                                            @if(auth()->user()->role === 'super-admin')
+                                            @if(auth()->user()->role === 'superadmin')
                                             <a href="{{ route('surat-masuk.review', $surat->id) }}"
                                                class="btn btn-sm btn-outline-info"
                                                data-bs-toggle="tooltip"
@@ -163,11 +163,12 @@
         </div>
 
         <!-- Form Tambah Surat Masuk -->
-        <div class="card shadow-sm border-0 mb-4" id="form-tambah">
-            <div class="card-header bg-white py-3">
+        <div class="card shadow-sm border-0 mb-4" id="formTambahSurat" style="display: none;">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 fw-bold text-primary">
                     <i class="bi bi-plus-circle me-2"></i>Tambah Surat Masuk
                 </h5>
+                <button type="button" class="btn-close" id="btnCloseForm" aria-label="Close"></button>
             </div>
             <div class="card-body">
                 <form action="{{ route('surat-masuk.store') }}" method="POST" enctype="multipart/form-data"
@@ -332,6 +333,31 @@
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
             tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl)
+            });
+
+            // Toggle form visibility
+            const btnTambahSurat = document.getElementById('btnTambahSurat');
+            const btnCloseForm = document.getElementById('btnCloseForm');
+            const formTambahSurat = document.getElementById('formTambahSurat');
+            const daftarSuratMasuk = document.querySelector('.card.shadow-sm.border-0.mb-5.overflow-hidden');
+
+            btnTambahSurat.addEventListener('click', function() {
+                formTambahSurat.style.display = 'block';
+                daftarSuratMasuk.style.display = 'none';
+                // Scroll to form
+                formTambahSurat.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+
+            btnCloseForm.addEventListener('click', function() {
+                formTambahSurat.style.display = 'none';
+                daftarSuratMasuk.style.display = 'block';
+                // Scroll back to top
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             });
 
             // Jenis surat lainnya toggle

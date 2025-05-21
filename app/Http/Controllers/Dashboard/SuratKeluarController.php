@@ -385,6 +385,10 @@ class SuratKeluarController extends Controller
 
     public function review($id)
     {
+        if (auth()->user()->role !== 'superadmin') {
+            return redirect()->route('surat-keluar')->with('error', 'Anda tidak memiliki akses untuk melakukan review surat.');
+        }
+
         $surat = SuratKeluar::findOrFail($id);
         $lampiran = LampiranSurat::where('surat_id', $surat->id)->get();
 
@@ -410,6 +414,10 @@ class SuratKeluarController extends Controller
 
     public function approval(Request $request, $id)
     {
+        if (!auth()->user()->role === 'superadmin') {
+            return redirect()->route('surat-keluar')->with('error', 'Anda tidak memiliki akses untuk melakukan approval surat.');
+        }
+
         $surat = SuratKeluar::findOrFail($id);
         $komentar = KomentarRevisi::where('surat_id', $id)->first();
 

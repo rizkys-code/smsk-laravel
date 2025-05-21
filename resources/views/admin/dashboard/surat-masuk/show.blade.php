@@ -213,7 +213,7 @@
                             <i class="bi bi-pencil-square"></i> Edit Surat
                         </a>
 
-                        @if(auth()->user()->role === 'super-admin')
+                        @if(auth()->user()->role === 'superadmin')
                         <a href="{{ route('surat-masuk.review', $surat->id) }}" class="btn btn-info d-flex align-items-center justify-content-center gap-2">
                             <i class="bi bi-clipboard-check"></i> Review Surat
                         </a>

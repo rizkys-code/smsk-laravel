@@ -28,14 +28,14 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [SuratMasukController::class, 'index'])->name('surat-masuk');
             Route::post('/', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
             Route::get('/{id}', [SuratMasukController::class, 'show'])->name('surat-masuk.show');
-            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit');
-            Route::get('/{id}/review', [SuratMasukController::class, 'review'])->name('surat-masuk.review');
-            Route::post('/{id}/review', [SuratMasukController::class, 'submitReview'])->name('surat-masuk.submit-review');
+            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit')->middleware('superadmin');
+            Route::get('/{id}/review', [SuratMasukController::class, 'review'])->name('surat-masuk.review')->middleware('superadmin');
+            Route::post('/{id}/review', [SuratMasukController::class, 'submitReview'])->name('surat-masuk.submit-review')->middleware('superadmin');
             Route::put('/{id}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
             Route::delete('/{id}', [SuratMasukController::class, 'destroy'])->name('surat-masuk.destroy');
             Route::get('/{id}/revision', [SuratMasukController::class, 'revision'])->name('surat-masuk.revision');
-            Route::post('/{id}/revision', [SuratMasukController::class, 'processRevision'])->name('surat-masuk.process-revision');
-            Route::post('/{id}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi');
+            Route::post('/{id}/revision', [SuratMasukController::class, 'processRevision'])->name('surat-masuk.process-revision')->middleware('superadmin');
+            Route::post('/{id}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi')->middleware('superadmin');
             Route::patch('/{id}/update-file', [SuratMasukController::class, 'updateFile'])->name('surat-masuk.update-file');
         });
 
@@ -55,10 +55,10 @@ Route::middleware(['auth'])->group(function () {
             Route::patch('/{id}', [SuratKeluarController::class, 'update'])->name('surat-keluar.update');
             Route::get('/{id}', [SuratKeluarController::class, 'show'])->name('surat-keluar.show');
             Route::delete('/{id}', [SuratKeluarController::class, 'destroy'])->name('surat-keluar.destroy');
-            Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review');
+            Route::get('/{id}/review', [SuratKeluarController::class, 'review'])->name('surat-keluar.review')->middleware('superadmin');
             Route::get('/{id}/print', [SuratKeluarController::class, 'cetak'])->name('surat-keluar.print');
-            Route::patch('/{id}/approval', [SuratKeluarController::class, 'approval'])->name('surat-keluar.approval');
-            Route::post('/{id}/comment', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.comment');
+            Route::patch('/{id}/approval', [SuratKeluarController::class, 'approval'])->name('surat-keluar.approval')->middleware('superadmin');
+            Route::post('/{id}/comment', [SuratKeluarController::class, 'tambahKomentar'])->name('surat-keluar.comment')->middleware('superadmin');
 
         });
     });
