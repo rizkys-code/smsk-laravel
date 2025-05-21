@@ -423,7 +423,7 @@ class SuratKeluarController extends Controller
 
         $request->validate([
             'status' => 'required|in:disetujui,ditolak',
-            'komentar_revisi' => 'nullable|string',
+            'komentar' => 'nullable|string',
         ]);
 
         $surat->status = $request->input('status');
@@ -436,7 +436,7 @@ class SuratKeluarController extends Controller
 
         $surat->save();
 
-        if ($request->status === 'ditolak' && $komentar) {
+        if ($request->status === 'ditolak') {
             SuratRevisi::create([
                 'surat_id' => $surat->id,
                 'nomor_surat' => $surat->nomor_surat,
@@ -445,7 +445,7 @@ class SuratKeluarController extends Controller
                 'lampiran' => $surat->lampiran,
                 'status' => 'diperbaiki',
                 'jenis' => $surat->jenis,
-                'komentar_revisi' => $komentar->komentar,
+                'komentar' => $request->komentar,
                 'created_by' => auth()->id(),
             ]);
         }

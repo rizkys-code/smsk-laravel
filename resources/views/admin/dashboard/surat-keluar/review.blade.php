@@ -290,7 +290,7 @@
                         @csrf
                         <div class="mb-3">
                             <label for="komentar" class="form-label">Komentar</label>
-                            <textarea name="komentar" id="komentar" rows="4" class="form-control" required placeholder="Tulis komentar atau catatan revisi..."></textarea>
+                            <textarea name="komentar" id="komentar" rows="4" class="form-control" required placeholder="Tulis komentar atau catatan revisi..." required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="dokumen_revisi" class="form-label">Dokumen Revisi (Opsional)</label>
