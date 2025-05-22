@@ -203,17 +203,72 @@ class SuratRevisiController extends Controller
 
         $surat = SuratKeluar::findOrFail($id);
 
-        $surat->update([
+        $data = [
             'jenis' => $request->jenis_surat,
             'perihal' => $request->perihal,
             'tanggal' => $request->tanggal,
             'isi' => $request->isi_surat,
-            'status' => 'diperbaiki',
+            'status' => 'diajukan',
             'keterangan_revisi' => $request->keterangan_revisi,
-        ]);
+        ];
 
-        return redirect()->route('surat-revisi')
-            ->with('success', 'Surat berhasil direvisi dan menunggu persetujuan.');
+        // Handle specific fields based on letter type
+        if ($request->jenis_surat === 'PP') {
+            $data['ditujukan_kepada'] = $request->ditujukan_kepada;
+            $data['jabatan_penerima'] = $request->jabatan_penerima;
+            $data['jumlah_bulan'] = $request->jumlah_bulan;
+
+            // Handle pengaju array
+            if ($request->has('pengaju')) {
+                $pengajuData = [];
+                foreach ($request->pengaju as $pengaju) {
+                    if (!empty($pengaju['nama']) && !empty($pengaju['npm'])) {
+                        $pengajuData[] = [
+                            'nama' => $pengaju['nama'],
+                            'npm' => $pengaju['npm'],
+                            'nopol' => $pengaju['nopol'] ?? '',
+                            'jenis_kendaraan' => $pengaju['jenis_kendaraan'] ?? 'Motor'
+                        ];
+                    }
+                }
+                $data['pengaju'] = json_encode($pengajuData);
+            }
+        } elseif ($request->jenis_surat === 'SA') {
+            $data['nama_kegiatan'] = $request->nama_kegiatan;
+            $data['semester'] = $request->semester;
+            $data['tahun_ajaran'] = $request->tahun_ajaran;
+
+            // Handle asisten array
+            if ($request->has('asisten')) {
+                $asistenData = [];
+                foreach ($request->asisten as $asisten) {
+                    if (!empty($asisten['nama']) && !empty($asisten['npm'])) {
+                        $asistenData[] = [
+                            'nama' => $asisten['nama'],
+                            'npm' => $asisten['npm'],
+                            'matkul' => $asisten['matkul'] ?? ''
+                        ];
+                    }
+                }
+                $data['asisten'] = json_encode($asistenData);
+            }
+        } elseif ($request->jenis_surat === 'U') {
+            $data['ditujukan_kepada'] = $request->ditujukan_kepada;
+            $data['jabatan_penerima'] = $request->jabatan_penerima;
+            $data['nama_kegiatan'] = $request->nama_kegiatan;
+            $data['tempat_kegiatan'] = $request->tempat_kegiatan;
+            $data['tanggal_kegiatan'] = $request->tanggal_kegiatan;
+            $data['waktu_mulai'] = $request->waktu_mulai;
+            $data['waktu_selesai'] = $request->waktu_selesai;
+        }
+
+        $surat->update($data);
+
+        // Hapus data di SuratRevisi
+        SuratRevisi::where('surat_id', $id)->delete();
+
+        return redirect()->route('surat-keluar')
+            ->with('success', 'Surat berhasil diajukan kembali.');
     }
 
 }

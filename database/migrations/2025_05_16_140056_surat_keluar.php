@@ -25,6 +25,9 @@ return new class extends Migration {
 
              // Add fields for Pengajuan Parkir PKL (PP)
              $table->string('ditujukan_kepada')->nullable();
+             $table->json('pengaju')->nullable()->comment('Format: [{"nama": string, "npm": string, "nopol": string, "jenis_kendaraan": string}]');
+             $table->json('asisten')->nullable()->comment('Format: [{"nama": string, "npm": string, "matkul": string}]');
+
              $table->string('jabatan_penerima')->nullable();
              $table->integer('jumlah_bulan')->nullable();
 

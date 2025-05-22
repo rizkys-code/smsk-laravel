@@ -18,9 +18,9 @@
             <a href="{{ route('surat-masuk') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
                 <i class="bi bi-arrow-left"></i> Kembali
             </a>
-            <a href="#" class="btn btn-outline-primary d-flex align-items-center gap-2" onclick="window.print()">
+            {{-- <a href="#" class="btn btn-outline-primary d-flex align-items-center gap-2" onclick="window.print()">
                 <i class="bi bi-printer"></i> Cetak
-            </a>
+            </a> --}}
         </div>
     </div>
 

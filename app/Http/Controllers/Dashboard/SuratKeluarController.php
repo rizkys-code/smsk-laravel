@@ -55,6 +55,8 @@ class SuratKeluarController extends Controller
             'waktu_selesai' => 'sometimes',
             'isi_surat' => 'sometimes|string',
             'lampiran' => 'sometimes',
+            'pengaju' => 'sometimes|array',
+            'asisten' => 'sometimes|array',
         ], [
             'jenis_surat.required' => 'Jenis surat harus diisi',
             'perihal.required' => 'Perihal surat harus diisi',
@@ -68,7 +70,13 @@ class SuratKeluarController extends Controller
             'waktu_selesai.required' => 'Waktu selesai kegiatan harus diisi',
             'isi_surat.required' => 'Isi surat harus diisi',
             'lampiran.required' => 'Lampiran surat harus diisi',
+            'pengaju.required' => 'Pengaju surat harus diisi',
+            'asisten.required' => 'Asisten surat harus diisi',
+            'ditujukan_kepada.required' => 'Nama penerima surat harus diisi',
+            'jabatan_penerima.required' => 'Jabatan penerima surat harus diisi',
         ]);
+
+        // dd($request->pengaju);
 
 
         $bulan = date('m', strtotime($request->tanggal));
@@ -112,6 +120,9 @@ class SuratKeluarController extends Controller
                 if ($request->has('jumlah_bulan')) {
                     $suratData['jumlah_bulan'] = $request->jumlah_bulan;
                 }
+                if ($request->has('pengaju')) {
+                    $suratData['pengaju'] = json_encode($request->pengaju);
+                }
                 break;
 
             case 'SA': // Sertif Asisten
@@ -124,6 +135,10 @@ class SuratKeluarController extends Controller
                 if ($request->has('tahun_ajaran')) {
                     $suratData['tahun_ajaran'] = $request->tahun_ajaran;
                 }
+                if ($request->has('asisten')) {
+                    $suratData['asisten'] = json_encode($request->asisten);
+                }
+
                 break;
 
             case 'U': // Undangan
@@ -150,6 +165,8 @@ class SuratKeluarController extends Controller
                 }
                 break;
         }
+
+        // dd($suratData);
 
         // Simpan ke surat_keluar
         $surat = SuratKeluar::create($suratData);
@@ -526,7 +543,7 @@ class SuratKeluarController extends Controller
             'surat_id' => $id,
             'komentar' => $request->komentar,
             'created_by' => auth()->id(),
-            
+
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan.');

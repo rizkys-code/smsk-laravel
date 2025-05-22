@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('logo_lab.png') }}">
     <style>
         :root {
             --sidebar-width: 250px;
@@ -255,17 +257,21 @@
                 <i class="bi bi-list"></i>
             </button>
             <div class="header-actions">
-                <div class="notification-badge">
+                <p class="fw-bold mb-0 fs-5">
+                    <i class="bi bi-person-circle me-1"></i>
+                    Selamat Datang, <span class="text-primary">{{ Auth::user()->name }}</span>!
+                </p>
+                {{-- <div class="notification-badge">
                     <button class="btn btn-light rounded-circle">
                         <i class="bi bi-bell"></i>
                     </button>
-                </div>
-                <div class="dropdown">
-                    <button class="btn btn-light rounded-circle" type="button" data-bs-toggle="dropdown"
+                </div> --}}
+                {{-- <div class="dropdown"> --}}
+                    {{-- <button class="btn btn-light rounded-circle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
                         <i class="bi bi-person"></i>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    </button> --}}
+                    {{-- <ul class="dropdown-menu dropdown-menu-end">
                         <li><span class="dropdown-item-text fw-bold">My Account</span></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Profile</a></li>
@@ -277,8 +283,8 @@
                                 <button type="submit" class="dropdown-item">Logout</button>
                             </form>
                         </li>
-                    </ul>
-                </div>
+                    </ul> --}}
+                {{-- </div> --}}
             </div>
         </div>
 

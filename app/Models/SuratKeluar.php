@@ -11,37 +11,41 @@ class SuratKeluar extends Model
 
     protected $table = 'surat_keluar';
 
-    protected $fillable = [
-        'nomor_surat',
-        'perihal',
-        'isi',
-        'tanggal',
-        'jenis',
-        'status',
-        'user_id',
-        'signed_by',
-        'signed_at',
-        'barcode_path',
+    protected $guarded = ['id'];
 
-        'ditujukan_kepada',
-        'jabatan_penerima',
-        'jumlah_bulan',
-        'nama_kegiatan',
-        'semester',
-        'tahun_ajaran',
-        'tempat_kegiatan',
-        'tanggal_kegiatan',
-        'waktu_mulai',
-        'waktu_selesai'
-    ];
+    // protected $fillable = [
+    //     'nomor_surat',
+    //     'perihal',
+    //     'isi',
+    //     'tanggal',
+    //     'jenis',
+    //     'status',
+    //     'user_id',
+    //     'signed_by',
+    //     'signed_at',
+    //     'barcode_path',
 
-    protected $casts = [
-        'tanggal' => 'datetime:Y-m-d',
-        'signed_at' => 'datetime',
-        'tanggal_kegiatan' => 'date',
-        'waktu_mulai' => 'datetime',
-        'waktu_selesai' => 'datetime',
-    ];
+    //     'ditujukan_kepada',
+    //     'jabatan_penerima',
+    //     'jumlah_bulan',
+    //     'nama_kegiatan',
+    //     'semester',
+    //     'tahun_ajaran',
+    //     'tempat_kegiatan',
+    //     'tanggal_kegiatan',
+    //     'waktu_mulai',
+    //     'waktu_selesai'
+    // ];
+
+
+    // protected $casts = [
+    //     'tanggal' => 'datetime:Y-m-d',
+    //     'signed_at' => 'datetime',
+    //     'tanggal_kegiatan' => 'date',
+    //     'waktu_mulai' => 'datetime',
+    //     'waktu_selesai' => 'datetime',
+    //     'pengaju' => 'array',
+    // ];
 
     public function user()
     {
