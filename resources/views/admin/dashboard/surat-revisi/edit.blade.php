@@ -100,17 +100,21 @@
                         <span class="input-group-text bg-light">
                             <i class="bi bi-calendar-date"></i>
                         </span>
-                        <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ old('tanggal', $surat->tanggal) }}" required>
+                        <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ old('tanggal', $surat->getRawOriginal('tanggal')) }}" required>
                     </div>
                     @error('tanggal')
                         <div class="text-danger small mt-1">{{ $message }}</div>
                     @enderror
+                    {{-- <div class="form-text">
+                        Raw date value: {{ $surat->tanggal }}<br>
+                        Formatted date: {{ $surat->tanggal->format('Y-m-d') }}<br>
+                        Original date: {{ $surat->getRawOriginal('tanggal') }}
+                    </div> --}}
                 </div>
 
-                <!-- Dynamic Form Fields Container -->
                 <div id="dynamicFormFields" class="col-12">
                     @if($surat->jenis == 'PP')
-                        <!-- Pengajuan Parkir PKL Fields -->
+                        <!-- Pengajuan Parkir PKL  -->
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="ditujukan_kepada" class="form-label fw-medium">Ditujukan Kepada</label>

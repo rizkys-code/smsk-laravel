@@ -63,6 +63,7 @@
                         <tbody>
 
                             @foreach ($revisiList as $surat)
+
                                 <tr>
                                     <td class="px-4 fw-medium">{{ $surat->nomor_surat }}</td>
                                     <td>
@@ -83,10 +84,6 @@
                                         @endif
                                     </td>
                                     <td>
-
-                                        {{-- @php
-                                            dd($surat);
-                                        @endphp --}}
                                         @if ($surat->komentar_revisi)
                                             <button type="button" class="btn btn-sm btn-outline-danger"
                                                 data-bs-toggle="popover" data-bs-placement="top" title="Komentar Revisi"
@@ -101,23 +98,23 @@
                                         <!-- Admin Upload Ulang -->
                                         @if (Auth::user()->role == 'admin' && $surat->status == 'ditolak')
                                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#uploadModal{{ $surat->id }}">
+                                                data-bs-target="#uploadModal{{ $surat->surat_id }}">
                                                 <i class="bi bi-upload"></i> Upload Revisi
                                             </button>
 
                                             <!-- Upload Modal -->
-                                            <div class="modal fade" id="uploadModal{{ $surat->id }}" tabindex="-1"
-                                                aria-labelledby="uploadModalLabel{{ $surat->id }}" aria-hidden="true">
+                                            <div class="modal fade" id="uploadModal{{ $surat->surat_id }}" tabindex="-1"
+                                                aria-labelledby="uploadModalLabel{{ $surat->surat_id }}" aria-hidden="true">
                                                 <div class="modal-dialog">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title"
-                                                                id="uploadModalLabel{{ $surat->id }}">Upload Revisi
+                                                                id="uploadModalLabel{{ $surat->surat_id }}">Upload Revisi
                                                                 Surat</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                         </div>
-                                                        <form action="{{ route('surat-masuk', $surat->id) }}"
+                                                        <form action="{{ route('surat-masuk', $surat->surat_id) }}"
                                                             method="POST" enctype="multipart/form-data">
                                                             <div class="modal-body">
                                                                 @csrf
@@ -151,25 +148,25 @@
 
                                         <!-- Pak Syarif Lihat Ulang -->
                                         {{-- @if (Auth::user()->name == 'Pak Syarif' && $surat->status == 'diperbaiki') --}}
-                                            <a href="{{ route('surat-revisi.edit', $surat->id) }}"
+                                            <a href="{{ route('surat-revisi.edit', $surat->surat_id) }}"
                                                 class="btn btn-sm btn-info d-flex align-items-center justify-content-center gap-1">
                                                 <i class="bi bi-eye"></i> Review Ulang
                                             </a>
                                         {{-- @endif --}}
 
                                         <!-- Semua user bisa lihat detail -->
-                                        <a href="{{ route('surat-keluar.show', $surat->id) }}"
+                                        <a href="{{ route('surat-keluar.show', $surat->surat_id) }}"
                                             class="btn btn-sm btn-outline-secondary mt-1">
                                             <i class="bi bi-info-circle"></i> Detail
                                         </a>
 
                                         <!-- Button Revisi Data - Direct to Form Page -->
-                                        @if (Auth::user()->role == 'admin' && $surat->status == 'ditolak')
-                                            <a href="{{ route('surat-revisi.edit', $surat->id) }}"
+                                        {{-- @if (Auth::user()->role == 'admin' && $surat->status == 'ditolak') --}}
+                                            <a href="{{ route('surat-revisi.edit', $surat->surat_id) }}"
                                                 class="btn btn-sm btn-warning mt-1">
                                                 <i class="bi bi-pencil-square"></i> Revisi Data
                                             </a>
-                                        @endif
+                                        {{-- @endif --}}
                                     </td>
                                 </tr>
                             @endforeach

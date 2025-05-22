@@ -35,4 +35,9 @@ class SuratRevisi extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function komentar()
+    {
+        return $this->hasMany(KomentarRevisi::class, 'surat_id', 'surat_id');
+    }
 }

@@ -22,7 +22,7 @@ class SuratKeluar extends Model
         'signed_by',
         'signed_at',
         'barcode_path',
-        
+
         'ditujukan_kepada',
         'jabatan_penerima',
         'jumlah_bulan',
@@ -36,7 +36,7 @@ class SuratKeluar extends Model
     ];
 
     protected $casts = [
-        'tanggal' => 'date',
+        'tanggal' => 'datetime:Y-m-d',
         'signed_at' => 'datetime',
         'tanggal_kegiatan' => 'date',
         'waktu_mulai' => 'datetime',

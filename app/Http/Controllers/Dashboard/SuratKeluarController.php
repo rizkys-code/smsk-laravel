@@ -79,7 +79,7 @@ class SuratKeluarController extends Controller
 
         $nomorSurat = "$request->jenis_surat/UBL/010/$urutan/$bulan/$tahun";
 
-        $status = 'menunggu'; 
+        $status = 'menunggu';
 
         if ($request->aksi === 'simpan_draft') {
             $status = 'draft';
@@ -500,7 +500,8 @@ class SuratKeluarController extends Controller
                 'lampiran' => $surat->lampiran,
                 'status' => 'diperbaiki',
                 'jenis' => $surat->jenis,
-                'komentar' => $request->komentar,
+                'komentar_revisi' => $request->komentar,
+                'tanggal' => $surat->tanggal,
                 'created_by' => auth()->id(),
             ]);
         }
@@ -513,19 +514,19 @@ class SuratKeluarController extends Controller
     {
         $request->validate([
             'komentar' => 'required|string',
-            'dokumen_revisi' => 'nullable|file|mimes:pdf,doc,docx'
+            // 'dokumen_revisi' => 'nullable|file|mimes:pdf,doc,docx'
         ]);
 
-        $path = null;
-        if ($request->hasFile('dokumen_revisi')) {
-            $path = $request->file('dokumen_revisi')->store('revisi_dokumen', 'public');
-        }
+        // $path = null;
+        // if ($request->hasFile('dokumen_revisi')) {
+        //     $path = $request->file('dokumen_revisi')->store('revisi_dokumen', 'public');
+        // }
 
         KomentarRevisi::create([
             'surat_id' => $id,
             'komentar' => $request->komentar,
             'created_by' => auth()->id(),
-            'dokumen_revisi_path' => $path,
+            
         ]);
 
         return back()->with('success', 'Komentar berhasil ditambahkan.');

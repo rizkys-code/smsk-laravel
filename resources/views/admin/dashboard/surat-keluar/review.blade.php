@@ -286,17 +286,20 @@
                     </h5>
                 </div>
                 <div class="card-body">
+                    @php
+                        // dd($surat);
+                    @endphp
                     <form action="{{ route('surat-keluar.comment', $surat->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="mb-3">
                             <label for="komentar" class="form-label">Komentar</label>
                             <textarea name="komentar" id="komentar" rows="4" class="form-control" required placeholder="Tulis komentar atau catatan revisi..." required></textarea>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label for="dokumen_revisi" class="form-label">Dokumen Revisi (Opsional)</label>
                             <input type="file" name="dokumen_revisi" id="dokumen_revisi" class="form-control" accept=".pdf,.doc,.docx">
                             <div class="form-text">Format: PDF, DOC, DOCX (Maks. 2MB)</div>
-                        </div>
+                        </div> --}}
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-send"></i> Kirim Komentar

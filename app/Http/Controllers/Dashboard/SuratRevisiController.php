@@ -96,25 +96,51 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Models\SuratRevisi;
 use App\Models\SuratKeluar;
+use App\Models\KomentarRevisi;
 use Illuminate\Http\Request;
 
 class SuratRevisiController extends Controller
 {
     // public function index()
     // {
-    //     $revisiList = SuratRevisi::with('surat')->latest()->get();
-    //     // dd($revisiList);
+    //     $revisiList = SuratRevisi::with(['surat', 'komentar'])->latest()->get();
+    //     dd($revisiList);
+
     //     return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
+    // }
+    // public function index()
+    // {
+    //     $revisiList = SuratRevisi::with('surat')->latest()->get();
+
+    //     $suratIds = $revisiList->pluck('surat_id');
+
+    //     $commentList = KomentarRevisi::with('surat')
+    //         ->whereIn('surat_id', $suratIds)
+    //         ->latest()
+    //         ->get();
+
+    //     dd($commentList, $revisiList);
+
+    //     return view('admin.dashboard.surat-revisi.view', compact('revisiList', 'commentList'));
     // }
 
     public function index()
-    {
-        // $revisiList = SuratKeluar::whereIn('status', ['ditolak', 'diperbaiki'])->get();
-        $revisiList = SuratRevisi::with('surat')->latest()->get();
-        // dd($revisiList);
+{
+    $revisiList = SuratRevisi::with('surat')->latest()->get();
 
-        return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
+    foreach ($revisiList as $revisi) {
+        $latestKomentar = KomentarRevisi::where('surat_id', $revisi->surat_id)
+            ->latest()
+            ->first();
+
+        if ($latestKomentar) {
+            $revisi->komentar_revisi = $latestKomentar->komentar;
+        }
     }
+
+
+    return view('admin.dashboard.surat-revisi.view', compact('revisiList'));
+}
 
     public function create()
     {
@@ -136,6 +162,7 @@ class SuratRevisiController extends Controller
     public function edit($id)
     {
         $surat = SuratKeluar::findOrFail($id);
+
 
         return view('admin.dashboard.surat-revisi.edit', compact('surat'));
     }
