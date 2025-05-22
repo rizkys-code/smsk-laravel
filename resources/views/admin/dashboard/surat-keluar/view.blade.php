@@ -503,7 +503,7 @@ Demikian surat permohonan ini kami sampaikan. Atas perhatian dan kerjasamanya, k
                                 <thead class="table-light">
                                     <tr>
                                         <th>Nama</th>
-                                        <th>NPM</th>
+                                        <th>NIS</th>
                                         <th>Nomor Polisi</th>
                                         <th>Jenis Kendaraan</th>
                                         <th>Aksi</th>
@@ -628,7 +628,7 @@ Demikian surat permohonan ini kami sampaikan. Atas perhatian dan kerjasamanya, k
                                 <thead class="table-light">
                                     <tr>
                                         <th>Nama</th>
-                                        <th>NPM</th>
+                                        <th>NIM/NIS</th>
                                         <th>Mata Kuliah/Kegiatan</th>
                                         <th>Aksi</th>
                                     </tr>
