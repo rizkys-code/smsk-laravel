@@ -208,7 +208,7 @@ class SuratRevisiController extends Controller
             'perihal' => $request->perihal,
             'tanggal' => $request->tanggal,
             'isi' => $request->isi_surat,
-            'status' => 'diajukan',
+            'status' => 'diperbaiki',
             'keterangan_revisi' => $request->keterangan_revisi,
         ];
 

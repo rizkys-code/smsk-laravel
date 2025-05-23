@@ -38,7 +38,7 @@ return new class extends Migration {
             $table->text('isi');
             $table->date('tanggal')->nullable();
             $table->string('jenis');
-            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'diperbaiki', 'dicetak'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'diperbaiki', 'dicetak', 'draft', 'sudah_mengajukan'])->default('menunggu');
             $table->text('komentar_revisi')->nullable();
             $table->string('lampiran')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
