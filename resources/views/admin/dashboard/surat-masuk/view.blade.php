@@ -52,7 +52,7 @@
                             <tr>
                                 <th class="py-3">No</th>
                                 <th class="py-3">Jenis Surat</th>
-                                <th class="py-3">Nama Surat</th>
+                                {{-- <th class="py-3">Nama Surat</th> --}}
                                 <th class="py-3">Pengirim</th>
                                 <th class="py-3">Instansi</th>
                                 <th class="py-3">Tanggal</th>
