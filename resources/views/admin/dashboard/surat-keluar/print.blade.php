@@ -128,7 +128,7 @@
                         <tr>
                             <th style="width: 5%;">No</th>
                             <th style="text-align: center;">Nama</th>
-                            <th style="text-align: center;">NPM</th>
+                            <th style="text-align: center;">NIS</th>
                             <th style="text-align: center;">Nomor Polisi</th>
                             <th style="text-align: center;">Jenis Kendaraan</th>
                         </tr>
@@ -165,8 +165,8 @@
                         <tr>
                             <th style="width: 5%;">No</th>
                             <th style="text-align: center;">Nama</th>
-                            <th style="text-align: center;">NPM</th>
-                            <th style="text-align: center;">Mata Kuliah/Kegiatan</th>
+                            <th style="text-align: center;">NIM/NIS</th>
+                            <th style="text-align: center;">Kegiatan</th>
                         </tr>
                     </thead>
                     <tbody>
