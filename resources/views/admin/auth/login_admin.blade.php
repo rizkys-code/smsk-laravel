@@ -148,18 +148,18 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password">
                 </div>
 
-                <div class="mb-3 form-check">
+                {{-- <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="customCheck" name="remember">
                     <label class="form-check-label" for="customCheck">Remember Me</label>
-                </div>
+                </div> --}}
 
                 <button type="submit" class="btn btn-login">Login</button>
             </form>
-
+{{-- 
             <div class="login-links">
                 <a href="forgot-password.html">Lupa Password?</a> |
                 <a href="register.html">Daftar Akun</a>
-            </div>
+            </div> --}}
 
             <div class="login-footer">
                 &copy; {{ date('Y') }} Sistem Manajemen Surat LAB ICT
