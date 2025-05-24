@@ -97,7 +97,7 @@
             padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-end;
             position: sticky;
             top: 0;
             z-index: 900;
@@ -206,6 +206,7 @@
                 <div class="brand-name fw-bold">Surat Masuk/Surat Keluar LAB ICT Terpadu</div>
             </div>
         </div>
+
         <div class="sidebar-content">
             <ul class="sidebar-menu">
                 <li class="sidebar-menu-item">
