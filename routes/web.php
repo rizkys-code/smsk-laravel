@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/', [SuratMasukController::class, 'index'])->name('surat-masuk');
             Route::post('/', [SuratMasukController::class, 'store'])->name('surat-masuk.store');
             Route::get('/{id}', [SuratMasukController::class, 'show'])->name('surat-masuk.show');
-            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit')->middleware('role:superadmin');
+            Route::get('/{id}/edit', [SuratMasukController::class, 'edit'])->name('surat-masuk.edit')->middleware('role:superadmin,admin');
             Route::get('/{id}/review', [SuratMasukController::class, 'review'])->name('surat-masuk.review')->middleware('role:superadmin');
             Route::post('/{id}/review', [SuratMasukController::class, 'submitReview'])->name('surat-masuk.submit-review')->middleware('role:superadmin');
             Route::put('/{id}', [SuratMasukController::class, 'update'])->name('surat-masuk.update');
@@ -36,6 +36,8 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/{id}/revision', [SuratMasukController::class, 'processRevision'])->name('surat-masuk.process-revision')->middleware('role:superadmin');
             Route::post('/{id}/disposisi', [SuratMasukController::class, 'disposisi'])->name('surat-masuk.disposisi')->middleware('role:superadmin');
             Route::patch('/{id}/update-file', [SuratMasukController::class, 'updateFile'])->name('surat-masuk.update-file');
+            Route::get('/{id}/download', [SuratMasukController::class, 'downloadFile'])->name('surat-masuk.download');
+            Route::get('/{id}/view', [SuratMasukController::class, 'viewFile'])->name('surat-masuk.view');
         });
 
         Route::prefix('surat-revisi')->group(function () {

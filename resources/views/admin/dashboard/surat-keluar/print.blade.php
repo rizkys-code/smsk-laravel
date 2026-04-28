@@ -254,9 +254,8 @@
     <div class="footer">
         <div class="signature">
             <p style="margin-bottom: 5px;">Hormat kami,</p>
-            <p style="margin-top: 0;">
-                <img src="{{ public_path('qr_lab.png') }}" alt="QR Lab" style="width: 100px; height: 100px; margin-bottom: 5px;"><br>
-                <strong>Achmad Syarif, S.T., M.Kom.</strong><span style="display:block; margin-top:-5px;">Kepala Laboratorium ICT Terpadu</span>
+            <p style="margin-top: 80px;">
+                <strong>Painem, S.Kom., M.Kom.</strong><span style="display:block; margin-top:-5px;">Kepala Laboratorium ICT Terpadu</span>
             </p>
         </div>
         <div class="clear"></div>

@@ -514,7 +514,6 @@ class SuratKeluarController extends Controller
                 'nomor_surat' => $surat->nomor_surat,
                 'perihal' => $surat->perihal,
                 'isi' => $surat->isi,
-                'lampiran' => $surat->lampiran,
                 'status' => 'diperbaiki',
                 'jenis' => $surat->jenis,
                 'komentar_revisi' => $request->komentar,

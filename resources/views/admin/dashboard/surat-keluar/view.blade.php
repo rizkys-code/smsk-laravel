@@ -487,9 +487,9 @@
                         <label for="isi_surat" class="form-label fw-medium">Isi Surat</label>
                         <textarea name="isi_surat" id="isi_surat" rows="5" class="form-control" readonly>Dengan hormat,
 
-Sehubungan dengan kegiatan Praktik Kerja Lapangan (PKL) mahasiswa Fasilkom UI di lingkungan Universitas Budi Luhur, dengan ini kami mengajukan permohonan flat rate parkir untuk mahasiswa tersebut selama periode PKL.
+Sehubungan dengan kegiatan Praktik Kerja Lapangan (PKL) Siswa Sekolah Menengah Kejuruan (SMK) di lingkungan Universitas Budi Luhur, dengan ini kami mengajukan permohonan flat rate parkir untuk Siswa tersebut selama periode PKL.
 
-Adapun mahasiswa yang mengajukan flat rate parkir adalah sebagaimana terlampir.
+Adapun Siswa yang mengajukan flat rate parkir adalah sebagaimana terlampir.
 
 Demikian surat permohonan ini kami sampaikan. Atas perhatian dan kerjasamanya, kami ucapkan terima kasih.</textarea>
                         <div class="form-text">Isi surat menggunakan template standar</div>

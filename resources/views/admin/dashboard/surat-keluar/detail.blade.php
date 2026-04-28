@@ -91,7 +91,7 @@
                     <div class="card shadow-sm border-0 mb-4">
                         <div class="card-header bg-white py-3">
                             <h5 class="mb-0 fw-bold text-primary">
-                                <i class="bi bi-paperclip me-2"></i>Lampiran
+                                <i class="bi bi-people me-2"></i>Data Pengaju
                                 <span class="badge bg-primary rounded-pill ms-2">{{ $lampiran->count() }}</span>
                             </h5>
                         </div>
@@ -100,16 +100,30 @@
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
                                         <tr>
-                                            <th class="border-0">Label</th>
-                                            <th class="border-0">Isi</th>
+                                            <th class="px-3">No</th>
+                                            <th>Nama</th>
+                                            <th>NIS/NPM</th>
+                                            <th>No. Polisi</th>
+                                            <th>Jenis Kendaraan</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($lampiran as $item)
-                                            <tr>
-                                                <td class="fw-medium">{{ $item->label }}</td>
-                                                <td>{{ $item->isi }}</td>
-                                            </tr>
+                                        @foreach ($lampiran as $i => $item)
+                                            @php $data = json_decode($item->isi, true); @endphp
+                                            @if ($data)
+                                                <tr>
+                                                    <td class="px-3">{{ $i + 1 }}</td>
+                                                    <td>{{ $data['nama'] ?? '-' }}</td>
+                                                    <td>{{ $data['npm'] ?? '-' }}</td>
+                                                    <td>{{ $data['nopol'] ?? '-' }}</td>
+                                                    <td>{{ $data['jenis_kendaraan'] ?? '-' }}</td>
+                                                </tr>
+                                            @else
+                                                <tr>
+                                                    <td class="px-3">{{ $i + 1 }}</td>
+                                                    <td colspan="4">{{ $item->isi }}</td>
+                                                </tr>
+                                            @endif
                                         @endforeach
                                     </tbody>
                                 </table>

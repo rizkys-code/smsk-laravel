@@ -15,7 +15,7 @@
                 <p class="mb-0 fw-medium">Total Surat Masuk</p>
             </div>
             <div class="mt-3">
-                <p class="h2 fw-bold mb-0">24</p>
+                <p class="h2 fw-bold mb-0">{{ $totalSuratMasuk }}</p>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
                 <p class="mb-0 fw-medium">Total Surat Keluar</p>
             </div>
             <div class="mt-3">
-                <p class="h2 fw-bold mb-0">18</p>
+                <p class="h2 fw-bold mb-0">{{ $totalSuratKeluar }}</p>
             </div>
         </div>
     </div>
@@ -35,7 +35,7 @@
                 <p class="mb-0 fw-medium">Revisi Pending</p>
             </div>
             <div class="mt-3">
-                <p class="h2 fw-bold mb-0">5</p>
+                <p class="h2 fw-bold mb-0">{{ $revisiPending }}</p>
             </div>
         </div>
     </div>
@@ -45,7 +45,7 @@
                 <p class="mb-0 fw-medium">Berhasil Di Setujui</p>
             </div>
             <div class="mt-3">
-                <p class="h2 fw-bold mb-0">42</p>
+                <p class="h2 fw-bold mb-0">{{ $berhasilDisetujui }}</p>
             </div>
         </div>
     </div>

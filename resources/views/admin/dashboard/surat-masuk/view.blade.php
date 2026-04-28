@@ -20,12 +20,37 @@
         </div>
 
         <!-- Status Alert -->
-        @if (session('status'))
+        @if (session('status') || session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <div class="d-flex align-items-center">
                     <i class="bi bi-check-circle-fill me-2"></i>
-                    <strong>{{ session('status') }}</strong>
+                    <strong>{{ session('status') ?? session('success') }}</strong>
                 </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-x-circle-fill me-2"></i>
+                    <strong>{{ session('error') }}</strong>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center mb-1">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Terdapat kesalahan pada form:</strong>
+                </div>
+                <ul class="mb-0 ps-3">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
@@ -53,7 +78,7 @@
                                 <th class="py-3">No</th>
                                 <th class="py-3">Jenis Surat</th>
                                 {{-- <th class="py-3">Nama Surat</th> --}}
-                                {{-- <th class="py-3">Pengirim</th> --}}
+                                <th class="py-3">Pengirim</th>
                                 <th class="py-3">Instansi</th>
                                 <th class="py-3">Tanggal</th>
                                 <th class="py-3">Perihal</th>
@@ -65,7 +90,7 @@
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $surat->jenis_surat }}</td>
-                                    <td>{{ $surat->nama_surat }}</td>
+                                    {{-- <td>{{ $surat->nama_surat }}</td> --}}
                                     <td>{{ $surat->pengirim }}</td>
                                     <td>{{ $surat->instansi_pengirim }}</td>
                                     <td>{{ \Carbon\Carbon::parse($surat->tanggal_surat)->format('d M Y') }}</td>
@@ -269,7 +294,7 @@
                                             <i class="bi bi-briefcase"></i>
                                         </span>
                                         <input type="text" id="jabatan_pengirim" name="jabatan_pengirim"
-                                            class="form-control" placeholder="Jabatan pengirim">
+                                            class="form-control" placeholder="Jabatan pengirim" required>
                                     </div>
                                 </div>
 
@@ -280,7 +305,7 @@
                                             <i class="bi bi-building"></i>
                                         </span>
                                         <input type="text" id="instansi" name="instansi" class="form-control"
-                                            placeholder="Nama instansi">
+                                            placeholder="Nama instansi" required>
                                     </div>
                                 </div>
 
@@ -359,6 +384,13 @@
                     behavior: 'smooth'
                 });
             });
+
+            // Auto-buka form jika ada validation error
+            @if ($errors->any())
+                formTambahSurat.style.display = 'block';
+                daftarSuratMasuk.style.display = 'none';
+                formTambahSurat.scrollIntoView({ behavior: 'smooth' });
+            @endif
 
             // Jenis surat lainnya toggle
             const jenisSurat = document.getElementById('jenis_surat');

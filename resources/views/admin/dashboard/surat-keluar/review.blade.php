@@ -38,18 +38,18 @@
                     </h5>
                     <span class="badge
                         {{ $surat->status === 'disetujui' ? 'bg-success' :
-                          ($surat->status === 'ditolak' ? 'bg-danger' :
-                           ($surat->status === 'sudah_mengajukan' ? 'bg-warning' :
+                            ($surat->status === 'ditolak' ? 'bg-danger' :
+                            ($surat->status === 'sudah_mengajukan' ? 'bg-warning' :
                             ($surat->status === 'diperbaiki' ? 'bg-info' : 'bg-secondary'))) }}
                         d-flex align-items-center gap-1 px-3 py-2">
                         <i class="bi
                             {{ $surat->status === 'disetujui' ? 'bi-check-circle' :
-                              ($surat->status === 'ditolak' ? 'bi-x-circle' :
-                               ($surat->status === 'sudah_mengajukan' ? 'bi-send' :
+                                ($surat->status === 'ditolak' ? 'bi-x-circle' :
+                                ($surat->status === 'sudah_mengajukan' ? 'bi-send' :
                                 ($surat->status === 'diperbaiki' ? 'bi-tools' : 'bi-hourglass-split'))) }}">
                         </i>
                         {{ $surat->status === 'sudah_mengajukan' ? 'Sudah Mengajukan' :
-                           ($surat->status === 'diperbaiki' ? 'Sedang Diperbaiki' : ucfirst($surat->status)) }}
+                            ($surat->status === 'diperbaiki' ? 'Sedang Diperbaiki' : ucfirst($surat->status)) }}
                     </span>
                 </div>
                 <div class="card-body">
@@ -106,12 +106,13 @@
                 </div>
             </div>
 
-            <!-- Lampiran -->
+            <!-- Lampiran / Data Pengaju -->
             @if ($lampiran->count())
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white py-3">
                         <h5 class="mb-0 fw-bold text-primary">
-                            <i class="bi bi-paperclip me-2"></i>Lampiran Tambahan
+                            <i class="bi bi-people me-2"></i>Data Pengaju
+                            <span class="badge bg-primary rounded-pill ms-2">{{ $lampiran->count() }}</span>
                         </h5>
                     </div>
                     <div class="card-body p-0">
@@ -119,16 +120,32 @@
                             <table class="table table-hover mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Label</th>
-                                        <th>Isi</th>
+                                        <th class="px-3">No</th>
+                                        <th>Nama</th>
+                                        <th>NIS/NPM</th>
+                                        <th>No. Polisi</th>
+                                        <th>Jenis Kendaraan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($lampiran as $item)
-                                        <tr>
-                                            <td class="fw-medium">{{ $item->label }}</td>
-                                            <td>{{ $item->isi }}</td>
-                                        </tr>
+                                    @foreach ($lampiran as $i => $item)
+                                        @php
+                                            $data = json_decode($item->isi, true);
+                                        @endphp
+                                        @if ($data)
+                                            <tr>
+                                                <td class="px-3">{{ $i + 1 }}</td>
+                                                <td>{{ $data['nama'] ?? '-' }}</td>
+                                                <td>{{ $data['npm'] ?? '-' }}</td>
+                                                <td>{{ $data['nopol'] ?? '-' }}</td>
+                                                <td>{{ $data['jenis_kendaraan'] ?? '-' }}</td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td class="px-3">{{ $i + 1 }}</td>
+                                                <td colspan="4">{{ $item->isi }}</td>
+                                            </tr>
+                                        @endif
                                     @endforeach
                                 </tbody>
                             </table>

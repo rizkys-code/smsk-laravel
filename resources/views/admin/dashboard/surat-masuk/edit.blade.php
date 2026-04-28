@@ -57,12 +57,12 @@
                         @endphp
 
                         @if($isImage)
-                            <img src="{{ asset('storage/' . $surat->dokumen_surat) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 300px;">
+                            <img src="{{ route('surat-masuk.view', $surat->id) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 300px;">
                         @elseif($isPdf)
                             <div class="text-center py-3">
                                 <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 4rem;"></i>
                                 <h6 class="mt-2">{{ basename($surat->dokumen_surat) }}</h6>
-                                <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank">
+                                <a href="{{ route('surat-masuk.view', $surat->id) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank">
                                     <i class="bi bi-eye"></i> Lihat PDF
                                 </a>
                             </div>
@@ -70,7 +70,7 @@
                             <div class="text-center py-3">
                                 <i class="bi bi-file-earmark-text text-primary" style="font-size: 4rem;"></i>
                                 <h6 class="mt-2">{{ basename($surat->dokumen_surat) }}</h6>
-                                <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank" download>
+                                <a href="{{ route('surat-masuk.download', $surat->id) }}" class="btn btn-sm btn-outline-primary mt-2" target="_blank" download>
                                     <i class="bi bi-download"></i> Unduh Dokumen
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
                     <!-- Upload New Document -->
                     <form action="{{ route('surat-masuk.update-file', $surat->id) }}" method="POST" enctype="multipart/form-data" class="mt-3">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <div class="mb-3">
                             <label for="new_file" class="form-label fw-medium">
                                 <i class="bi bi-upload me-1"></i>Ganti Dokumen (Opsional)

@@ -41,7 +41,7 @@
                     <h5 class="mb-0 fw-bold text-primary">
                         <i class="bi bi-file-earmark-text me-2"></i>Dokumen Surat
                     </h5>
-                    <a href="{{ asset('storage/' . $surat->dokumen_surat) }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
+                    <a href="{{ route('surat-masuk.download', $surat->id) }}" class="btn btn-sm btn-outline-primary" target="_blank" download>
                         <i class="bi bi-download"></i> Unduh
                     </a>
                 </div>
@@ -55,9 +55,9 @@
                         @endphp
 
                         @if($isImage)
-                            <img src="{{ asset('storage/' . $surat->dokumen_surat) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 600px;">
+                            <img src="{{ route('surat-masuk.view', $surat->id) }}" class="img-fluid" alt="Preview Dokumen" style="max-height: 600px;">
                         @elseif($isPdf)
-                            <embed src="{{ asset('storage/' . $surat->dokumen_surat) }}" type="application/pdf" width="100%" height="600px">
+                            <embed src="{{ route('surat-masuk.view', $surat->id) }}" type="application/pdf" width="100%" height="600px">
                         @else
                             <div class="text-center py-5">
                                 <i class="bi bi-file-earmark-text text-primary" style="font-size: 5rem;"></i>

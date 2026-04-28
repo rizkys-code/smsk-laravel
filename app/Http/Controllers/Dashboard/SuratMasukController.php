@@ -12,7 +12,6 @@ class SuratMasukController extends Controller
 {
     public function index()
     {
-        $suratMasuk = SuratMasuk::orderBy('created_at', 'desc')->get();
         $suratMasuk = SuratMasuk::latest()->paginate(10);
 
         return view('admin.dashboard.surat-masuk.view', compact('suratMasuk'));
@@ -245,5 +244,53 @@ class SuratMasukController extends Controller
         return redirect()->route('surat-masuk.show', $id)->with('status', 'Review surat berhasil disimpan.');
     }
 
-}
+    public function downloadFile($id)
+    {
+        $surat = SuratMasuk::findOrFail($id);
 
+        if (!$surat->dokumen_surat) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        // Cari file di folder berdasarkan ID surat
+        $folder = storage_path('app/public/surat_masuk');
+        $files = glob($folder . '/*');
+        
+        // Cari file yang cocok dengan path di DB
+        foreach ($files as $file) {
+            if (strpos($file, basename($surat->dokumen_surat)) !== false || 
+                basename($file) === basename($surat->dokumen_surat)) {
+                return response()->download($file);
+            }
+        }
+
+        // Kalau tidak ketemu, coba download langsung dari path DB
+        if (Storage::disk('public')->exists($surat->dokumen_surat)) {
+            return Storage::disk('public')->download($surat->dokumen_surat);
+        }
+
+        return redirect()->back()->with('error', 'File tidak ditemukan di server.');
+    }
+
+    public function viewFile($id)
+    {
+        $surat = SuratMasuk::findOrFail($id);
+
+        if (!$surat->dokumen_surat) {
+            return response('File tidak ditemukan.', 404);
+        }
+
+        // Cari file di folder
+        $folder = storage_path('app/public/surat_masuk');
+        $files = glob($folder . '/*');
+        
+        foreach ($files as $file) {
+            if (strpos($file, basename($surat->dokumen_surat)) !== false || 
+                basename($file) === basename($surat->dokumen_surat)) {
+                return response()->file($file);
+            }
+        }
+
+        return response('File tidak ditemukan di server.', 404);
+    }
+}
